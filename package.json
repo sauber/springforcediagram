@@ -1,0 +1,19 @@
+{
+  "name": "springforcediagram",
+  "version": "1.0.0",
+  "description": "Render diagram of connected nodes using spring force",
+  "main": "index.js",
+  "scripts": {
+    "test": "jasmine spec/*"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sauber/springforcediagram.git"
+  },
+  "author": "Søren Døssing <netcom@sauber.net>",
+  "license": "Artistic-2.0",
+  "bugs": {
+    "url": "https://github.com/sauber/springforcediagram/issues"
+  },
+  "homepage": "https://github.com/sauber/springforcediagram#readme"
+}
