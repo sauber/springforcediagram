@@ -4,6 +4,7 @@ const Node = require("./node.js");
 class Diagram {
   constructor () { 
     this.nodes = new Node;
+    this.edges = new Node;
   }
 
   add (...children) {
