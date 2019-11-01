@@ -15,5 +15,8 @@
   "bugs": {
     "url": "https://github.com/sauber/springforcediagram/issues"
   },
-  "homepage": "https://github.com/sauber/springforcediagram#readme"
+  "homepage": "https://github.com/sauber/springforcediagram#readme",
+  "devDependencies": {
+    "jasmine": "^3.5.0"
+  }
 }
