@@ -3,17 +3,20 @@
 //   https://codereview.stackexchange.com/questions/226709/javascript-tree-class
 
 "use strict";
-const Text = require("./text");
+const Text      = require("./text");
+const Rectangle = require("./rectangle");
 
 class Node {
   constructor (value = undefined, children = []) {
     this.value = value;
+    this.shape = new Rectangle();
     this.children = children;
     if ( value ) {
       // Add a text shape as sub node
       const label = new Text(value);
       this.children.unshift(label);
     }
+    //console.log(this);
   }
 
   add (...children) {
@@ -21,6 +24,12 @@ class Node {
       this.children.push(child);
     }
     return this;
+  }
+
+  // Size of node
+  area () {
+    //console.log(this.shape);
+    return this.shape.area();
   }
 }
 

@@ -12,6 +12,10 @@ class Rectangle {
   }
 
   area () {
+    //console.log(this);
+    //const area = this.w * this.h;
+    //console.log(area);
+    //return area;
     return this.w * this.h;
   }
 }
