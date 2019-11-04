@@ -40,7 +40,7 @@ class Text {
           new_length = words[index].length;
         }
 
-        // if lines would become too long then add new line
+        // If line would become too long then add new line
         if ( new_length > width ) {
           lines.push('');
           last_line++;
@@ -55,9 +55,9 @@ class Text {
       if ( lines.length <= this.desired_line_count ) {
         // console.log("The count of lines became " + lines.length);
         // console.log(lines);
-        if ( this.desired_line_count > lines.length ) {
-          this.desired_line_count = lines.length;
-        }
+        //if ( this.desired_line_count > lines.length ) {
+        //  this.desired_line_count = lines.length;
+        //}
         // console.log(this.desired_line_count);
         return lines;
       }
@@ -73,7 +73,16 @@ class Text {
 
   // Attempt to make more lines of output
   taller() {
-    this.desired_line_count++;
+    if ( this.desired_line_count < this.words().length ) {
+      this.desired_line_count++;
+    }
+  }
+
+  // Attempt to make more lines of output
+  flatter() {
+    if ( this.desired_line_count > 1 ) {
+      this.desired_line_count--;
+    }
   }
 
   // Size of longest word
