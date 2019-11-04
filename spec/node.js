@@ -3,6 +3,8 @@ const Node = require("../src/node");
 describe("Node", function () {
   it("should allow empty instantiation", function () {
     const node = new Node;
+
+    expect(node.area).toBe(0);
   });
 
   it("should allow adding child nodes", function () {
@@ -19,5 +21,8 @@ describe("Node", function () {
 
     const textnode = new Node("label");
     expect(textnode.children.length).toBe(1);
+  });
+
+  it("should have an area when having subnode"), function () {
   });
 });
