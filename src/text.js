@@ -9,14 +9,19 @@ class Text {
     this.desired_line_count = desired_line_count;
   }
 
-  words () {
-    //console.log(this.value());
-    return this.value().trim().split(/\s+/);
+  get words () {
+    const text = this.value();
+    if ( text.match(/\S+/) ) {
+      //console.log(this.value());
+      return this.value().trim().split(/\s+/);
+    } else {
+      return [];
+    }
   }
 
   // Join words into lines, trying to match desired number of lines
-  lines () {
-    var words = this.words();
+  get lines () {
+    var words = this.words;
     if ( this.desired_line_count == 1 ) {
       return [ words.join(' ') ];
     }
@@ -66,7 +71,7 @@ class Text {
 
   // Attempt to make more lines of output
   taller() {
-    if ( this.desired_line_count < this.words().length ) {
+    if ( this.desired_line_count < this.words.length ) {
       this.desired_line_count++;
     }
   }
@@ -80,20 +85,35 @@ class Text {
 
   // Size of longest word is minimum width
   min_width () {
-    return Math.max(...[this.words().map(x => x.length)]);
+    return Math.max(...[this.words.map(x => x.length)]);
   }
 
   // Length of all words joined
   max_width () {
-    return this.words().join(' ').length;
+    return this.words.join(' ').length;
   }
 
-  width () {
-    return Math.max(...(this.lines().map(x => x.length)));
+  get width () {
+    return Math.max(...(this.lines.map(x => x.length)));
   }
 
-  height () {
-    return this.lines().length;
+  get height () {
+    return this.lines.length;
+  }
+
+  // For text box, it becomes more narrow when becoming taller
+  // Input:
+  //   top    = amount top should rise
+  //   bottom = amount bottom should sink
+  //   left   = amount left should widen
+  //   right  = amount right should widen
+  adjustSize (top, bottom, left, right) {
+    const higher = top + bottom - ( left + right )
+    if ( higher >= 1 ) {
+      this.taller();
+    } else if ( higher <= -1 ) {
+      this.flatter();
+    }
   }
 
 }

@@ -4,15 +4,10 @@
 "use strict";
 
 class Rectangle {
-  constructor (x = 0, y = 0, w = 0, h = 0) {
-    this.x = x;  // Center x
-    this.y = y;  // Center y
-    this.w = w;  // Width
-    this.h = h;  // Height
+  constructor (width = 0, height = 0) {
+    this.width  = width;
+    this.height = height;
   }
-
-  width  () { return this.w }
-  height () { return this.h }
 }
 
 module.exports = Rectangle;

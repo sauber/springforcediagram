@@ -7,17 +7,7 @@ describe("Node", function () {
 
     expect(node.area()).toBe(0);
     expect(node.children.length).toBe(0);
-    expect(node.center.position.x).toBe(0);
-    expect(node.center.position.y).toBe(0);
-
     expect(node.center.position).toEqual( new Vector(0,0) );
-  });
-
-  it("could have position", function () {
-    const node = new Node;
-
-    expect(node.area()).toBe(0);
-    expect(node.children.length).toBe(0);
   });
 
   it("should allow adding child nodes", function () {
@@ -26,12 +16,13 @@ describe("Node", function () {
     expect(node.children.length).toBe(1);
     node.add("b", "c");
     expect(node.children.length).toBe(3);
+    //console.log(node);
   });
 
   it("may be a text node", function () {
     const node = new Node("a cat in the hat");
     //expect(textnode.children.length).toBe(1);
-    expect(node.area()).toBe(16);
+    expect(node.size()).toEqual( new Vector(16,1) );
   });
 
   // Apply force to a point

@@ -31,7 +31,7 @@ class Node {
 
   add (...children) {
     for (let child of children) {
-      this.children.push(child);
+      this.children.push(new Node(child));
     }
     return this;
   }
@@ -41,7 +41,7 @@ class Node {
     //console.log(this.shape);
     //return this.shape.area();
     //console.log(new Vector(this.shape.width(), this.shape.height()));
-    return new Vector(this.shape.width(), this.shape.height());
+    return new Vector(this.shape.width, this.shape.height);
   }
 
   area () {
@@ -50,11 +50,32 @@ class Node {
   }
 
   // Run one animation frame
-  tick () {
+  tick ( timestep ) {
     // Get pressure from all subnodes
     for ( let child of this.children ) {
       //console.log(child);
     }
+
+    /*
+       Sequence:
+         - pressures have already been translated to accelerations
+         - apply accelations to velocities
+         - apply accelerations to shape size
+         - reset accelerations
+         - update position from velocities
+         - apply pressure to neighbor objects
+         - update kinetic energy
+    */
+  }
+
+  adjustShapeToPressure (timestep) {
+    this.shape.adjustSize(
+      timestep,
+      this.top.acceleration(),
+      this.bottom.acceleration(),
+      this.left.acceleration(),
+      this.right.acceleration(),
+    );
   }
 
 }
