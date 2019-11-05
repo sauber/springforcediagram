@@ -1,6 +1,6 @@
 "use strict";
 const Physics = require("./physics.js");
-const Vector = require("./vector.js");
+const Vector  = require("./vector.js");
 
 class Point {
   constructor (position = new Vector(0,0), mass = Physics.minimalMassWeight ) { 

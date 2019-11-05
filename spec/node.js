@@ -5,7 +5,7 @@ describe("Node", function () {
   it("should allow empty instantiation", function () {
     const node = new Node;
 
-    expect(node.area()).toBe(0);
+    expect(node.area).toBe(0);
     expect(node.children.length).toBe(0);
     expect(node.center.position).toEqual( new Vector(0,0) );
   });
@@ -22,7 +22,7 @@ describe("Node", function () {
   it("may be a text node", function () {
     const node = new Node("a cat in the hat");
     //expect(textnode.children.length).toBe(1);
-    expect(node.size()).toEqual( new Vector(16,1) );
+    expect(node.size).toEqual( new Vector(16,1) );
   });
 
   // Apply force to a point

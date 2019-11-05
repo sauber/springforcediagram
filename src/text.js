@@ -29,8 +29,8 @@ class Text {
     var width;
     var lines;
     var index;
-    const max = this.max_width();
-    const longest_word = this.min_width();
+    const max = this.max_width;
+    const longest_word = this.min_width;
     const est_min = Math.floor( max / ( this.desired_line_count + 1 ) );
     const min = longest_word > est_min ? longest_word : est_min;
     for ( width = min; width <= max; width++ ) {
@@ -84,12 +84,12 @@ class Text {
   }
 
   // Size of longest word is minimum width
-  min_width () {
+  get min_width () {
     return Math.max(...[this.words.map(x => x.length)]);
   }
 
   // Length of all words joined
-  max_width () {
+  get max_width () {
     return this.words.join(' ').length;
   }
 

@@ -37,16 +37,16 @@ class Node {
   }
 
   // Size of node
-  size () {
+  get size () {
     //console.log(this.shape);
     //return this.shape.area();
     //console.log(new Vector(this.shape.width(), this.shape.height()));
     return new Vector(this.shape.width, this.shape.height);
   }
 
-  area () {
-    const size = this.size();
-    return size.x * size.y;
+  get area () {
+    //const size = this.size();
+    return this.size.x * this.size.y;
   }
 
   // Run one animation frame
