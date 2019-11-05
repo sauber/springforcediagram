@@ -8,6 +8,17 @@ class Rectangle {
     this.width  = width;
     this.height = height;
   }
+
+  // For rectangle box, it becomes wider or taller
+  // Input:
+  //   top    = amount top should rise
+  //   bottom = amount bottom should sink
+  //   left   = amount left should widen
+  //   right  = amount right should widen
+  adjustSize (top, bottom, left, right) {
+    this.width  += left + right;
+    this.height += top  + bottom;
+  }
 }
 
 module.exports = Rectangle;
