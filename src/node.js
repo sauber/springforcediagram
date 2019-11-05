@@ -5,18 +5,28 @@
 "use strict";
 const Text      = require("./text");
 const Rectangle = require("./rectangle");
+const Point     = require("./point");
+const Vector    = require("./vector");
 
 class Node {
   constructor (value = undefined, children = []) {
     this.value = value;
-    this.shape = new Rectangle();
-    this.children = children;
+
+    // Value is assumed to be text
     if ( value ) {
-      // Add a text shape as sub node
-      const label = new Text(value);
-      this.children.unshift(label);
+      var parent = this;
+      this.shape = new Text(function () { return parent.value });
+    } else {
+      this.shape = new Rectangle();
     }
-    //console.log(this);
+
+    this.center = new Point();  // Top center
+    this.top    = new Point();  // Top center
+    this.bottom = new Point();  // Bottom center
+    this.left   = new Point();  // Left center
+    this.right  = new Point();  // Right center
+
+    this.children = children;
   }
 
   add (...children) {
@@ -27,10 +37,26 @@ class Node {
   }
 
   // Size of node
-  area () {
+  size () {
     //console.log(this.shape);
-    return this.shape.area();
+    //return this.shape.area();
+    //console.log(new Vector(this.shape.width(), this.shape.height()));
+    return new Vector(this.shape.width(), this.shape.height());
   }
+
+  area () {
+    const size = this.size();
+    return size.x * size.y;
+  }
+
+  // Run one animation frame
+  tick () {
+    // Get pressure from all subnodes
+    for ( let child of this.children ) {
+      //console.log(child);
+    }
+  }
+
 }
 
 module.exports = Node;

@@ -11,13 +11,8 @@ class Rectangle {
     this.h = h;  // Height
   }
 
-  area () {
-    //console.log(this);
-    //const area = this.w * this.h;
-    //console.log(area);
-    //return area;
-    return this.w * this.h;
-  }
+  width  () { return this.w }
+  height () { return this.h }
 }
 
 module.exports = Rectangle;

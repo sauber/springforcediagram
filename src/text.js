@@ -1,16 +1,17 @@
 "use strict";
 
 class Text {
-  constructor (value = '', x = 0, y = 0, desired_line_count = 1, font_size = 1) {
-    this.value = value;  // Text string
-    this.x = x;  // Center x
-    this.y = y;  // Center y
-    this.desired_line_count = desired_line_count;  // Number of desired lines in rendered output
-    this.font_size = font_size;  // Size of font
+  constructor (value_callback = function () { return ''}, desired_line_count = 1) {
+    // Parent enclosing node
+    this.value = value_callback;
+
+    // Number of desired lines in rendered output
+    this.desired_line_count = desired_line_count;
   }
 
   words () {
-    return this.value.split(/\s+/);
+    //console.log(this.value());
+    return this.value().trim().split(/\s+/);
   }
 
   // Join words into lines, trying to match desired number of lines
@@ -23,10 +24,10 @@ class Text {
     var width;
     var lines;
     var index;
-    // console.log(this.min_width());
-    // console.log(this.max_width());
-    const min = this.min_width();
     const max = this.max_width();
+    const longest_word = this.min_width();
+    const est_min = Math.floor( max / ( this.desired_line_count + 1 ) );
+    const min = longest_word > est_min ? longest_word : est_min;
     for ( width = min; width <= max; width++ ) {
       // console.log(width);
       lines = [''];
@@ -53,23 +54,15 @@ class Text {
         }
       }
       if ( lines.length <= this.desired_line_count ) {
-        // console.log("The count of lines became " + lines.length);
-        // console.log(lines);
-        //if ( this.desired_line_count > lines.length ) {
-        //  this.desired_line_count = lines.length;
-        //}
-        // console.log(this.desired_line_count);
         return lines;
       }
     }
     // console.log("Reached end of loop");
   }
   
-  area () {
-    var lines = this.lines().map(x => x.length);
-    //console.log(lines);
-    return lines.length * Math.max(...lines);
-  }
+  //area () {
+  //  return this.width() * this.height();
+  //}
 
   // Attempt to make more lines of output
   taller() {
@@ -85,19 +78,22 @@ class Text {
     }
   }
 
-  // Size of longest word
+  // Size of longest word is minimum width
   min_width () {
-    //console.log(this.words());
-    var word_lengths = this.words().map(x => x.length);
-    //console.log(word_lengths);
-    var max = Math.max(...word_lengths);
-    //console.log(max);
-    return Math.max(...word_lengths);
+    return Math.max(...[this.words().map(x => x.length)]);
   }
 
   // Length of all words joined
   max_width () {
     return this.words().join(' ').length;
+  }
+
+  width () {
+    return Math.max(...(this.lines().map(x => x.length)));
+  }
+
+  height () {
+    return this.lines().length;
   }
 
 }
