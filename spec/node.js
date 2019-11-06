@@ -66,11 +66,21 @@ describe("Node", function () {
     expect(node.center.position.x).toBeGreaterThan(0);
   });
 
-  it("should have no kinetic energy when at rest", function () {
+  it("should move and slow after a bump", function () {
     const node = new Node;
-    node.step(1);
-    //console.log(node);
-    expect(node.kineticEnergy).toBe(0);
+    node.bottom.applyForce(new Vector(0,1));
+    node.step(1.1);
+    expect(node.kineticEnergy).toBeGreaterThan(1);
+    let step_count = 0;
+    while( node.kineticEnergy > 0.1 ) {
+      //console.log(node.kineticEnergy);
+      node.step(1.0);
+      step_count++;
+    }
+    //console.log(node.center);
+    //console.log(step_count);
+    // It takes 14 steps to slow down enough for kinetic energy to be less than 0.1
+    expect(step_count).toBe(14);
   });
 
 

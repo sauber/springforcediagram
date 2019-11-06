@@ -14,14 +14,14 @@ class Point {
   }
 
   get mass () {
-    return this.mass_callback()
-  }
-
-  applyForce (force) {
-    var mass = this.mass;
+    var mass = this.mass_callback()
     if ( mass < Physics.Point.minimalMass ) {
       mass = Physics.Point.minimalMass;
     }
+    return mass;
+  }
+
+  applyForce (force) {
     this.acceleration = this.acceleration.add(force.divide(this.mass));
   }
 }

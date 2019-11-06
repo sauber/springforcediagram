@@ -36,7 +36,7 @@ class Vector {
   };
 
   normalise () {
-    return this.divide(this.magnitude());
+    return this.divide(this.magnitude);
   };
 
 }

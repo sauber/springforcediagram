@@ -101,11 +101,35 @@ class Node {
     }
   }
 
+  /*
+     If time==0, then inertia = 1
+     If time==Inf, then inertia = 0
+     If Friction==1, then inertia = 0
+     If Friction==0, then inertia = 1
+     If Friction==0.5 && time==0.5, then inertia = 0.71
+     If Friction==0.5 && time==1, then inertia = 0.5
+     If Friction==0.5 && time==2, then inertia = 0.25
+
+     Friction    0.0  0.1  0.5  0.9  1.0
+     Time   0.0  1.0  1.0  1.0  1.0  1.0 
+            0.1  1.0  0.99 0.93 0.79 0.0
+            0.5  1.0  0.95 0.71 0.32 0.0
+            0.9  1.0  0.91 0.54 0.13 0.0
+            1.0  1.0  0.90 0.50 0.10 0.0
+            2.0  1.0  0.81 0.25 0.01 0.0
+            4.0  1.0  0.66 0.06 0.00 0.0
+           10.0  1.0  0.35 0.00 0.00 0.0
+
+     (1-friction)**time
+  */
+
   updateVelocity (timestep) {
-    // Absorb acceleration into velocity
+    const friction = Physics.Node.friction;
+    const inertia = (1-friction) ** timestep;
+    // Absorb acceleraion into velocity
     for (const point of this.points) {
       // XXX: Edge and center friction may be different
-      point.velocity = point.velocity.add(point.acceleration.multiply(timestep).multiply(1 - Physics.Node.friction));
+      point.velocity = point.velocity.add(point.acceleration.multiply(timestep)).multiply(inertia);
       if ( point.velocity.magnitude > Physics.Node.maxSpeed ) {
         point.velocity = point.velocity.normalise().multiply(Physics.Node.maxSpeed);
       }
@@ -131,7 +155,8 @@ class Node {
     var energy = 0;
     for (const point of this.points) {
       var speed = point.velocity.magnitude;
-      energy += 0.5 * point.mass * speed * speed;
+      var mass = point.mass;
+      energy += 0.5 * mass * speed * speed;
     }
     return energy;
   }
