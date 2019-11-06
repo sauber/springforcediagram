@@ -20,11 +20,16 @@ class Node {
       this.shape = new Rectangle();
     }
 
-    this.center = new Point();  // Top center
-    this.top    = new Point();  // Top center
-    this.bottom = new Point();  // Bottom center
-    this.left   = new Point();  // Left center
-    this.right  = new Point();  // Right center
+    var node = this;
+    var dynamic_mass = function () {
+      // There are five points, each weighing 20% of whole body.
+      return node.area / 5;
+    }
+    this.center = new Point(undefined, dynamic_mass);  // Middle
+    this.top    = new Point(undefined, dynamic_mass);  // Top center
+    this.bottom = new Point(undefined, dynamic_mass);  // Bottom center
+    this.left   = new Point(undefined, dynamic_mass);  // Left center
+    this.right  = new Point(undefined, dynamic_mass);  // Right center
 
     this.children = children;
   }
@@ -68,9 +73,16 @@ class Node {
     */
   }
 
-  adjustShapeToPressure (timestep) {
+  updateVelocity (timestep) {
+    for ( var point of [this.center, this.top, this.bottom, this.left, this.right]) {
+      //console.log(point);
+      point.velocity = point.velocity.add(point.acceleration.multiply(timestep));
+      //console.log(point);
+    }
+  }
+
+  adjustShapeSizeToBoundaryPressure (timestep) {
     this.shape.adjustSize(
-      timestep,
       this.top.acceleration(),
       this.bottom.acceleration(),
       this.left.acceleration(),

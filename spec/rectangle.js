@@ -22,14 +22,10 @@ describe("Rectangle", function () {
 
     for ( let values of cases ) {
       const rect = new Rectangle(2, 2);
-      //console.log(values);
       let [width, height] = values.splice(4, 2);
-      //console.log(values);
-      //console.log(width, height);
       rect.adjustSize(...values);
       expect(rect.width ).toBe(width );
       expect(rect.height).toBe(height);
-      //console.log(text.lines);
     }
   });
   
