@@ -12,7 +12,6 @@ class Text {
   get words () {
     const text = this.value();
     if ( text.match(/\S+/) ) {
-      //console.log(this.value());
       return this.value().trim().split(/\s+/);
     } else {
       return [];
@@ -62,13 +61,8 @@ class Text {
         return lines;
       }
     }
-    // console.log("Reached end of loop");
   }
   
-  //area () {
-  //  return this.width() * this.height();
-  //}
-
   // Attempt to make more lines of output
   taller() {
     if ( this.desired_line_count < this.words.length ) {
@@ -108,11 +102,10 @@ class Text {
   //   left   = amount left should widen
   //   right  = amount right should widen
   adjustSize (top, bottom, left, right) {
-    const higher = top + bottom - ( left + right )
-    if ( higher >= 1 ) {
-      this.taller();
-    } else if ( higher <= -1 ) {
+    if ( (top+bottom) >= (left+right+1) ) {
       this.flatter();
+    } else if ( (left+right) >= (top+bottom+1) ) {
+      this.taller();
     }
   }
 

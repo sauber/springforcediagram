@@ -3,10 +3,12 @@
 //   https://codereview.stackexchange.com/questions/226709/javascript-tree-class
 
 "use strict";
+
 const Text      = require("./text");
 const Rectangle = require("./rectangle");
 const Point     = require("./point");
 const Vector    = require("./vector");
+const Physics = require("./physics.js");
 
 class Node {
   constructor (value = undefined, children = []) {
@@ -54,13 +56,27 @@ class Node {
     return this.size.x * this.size.y;
   }
 
-  // Run one animation frame
-  tick ( timestep ) {
-    // Get pressure from all subnodes
-    for ( let child of this.children ) {
-      //console.log(child);
-    }
+  get boundaries () {
+    return [
+      this.top,
+      this.bottom,
+      this.left,
+      this.right,
+    ];
+  }
 
+  get points () {
+    return [
+      this.top,
+      this.bottom,
+      this.left,
+      this.right,
+      this.center,
+    ];
+  }
+
+  // Run one animation frame
+  step ( timestep ) {
     /*
        Sequence:
          - pressures have already been translated to accelerations
@@ -71,25 +87,54 @@ class Node {
          - apply pressure to neighbor objects
          - update kinetic energy
     */
+
+    this.updateAcceleration(timestep);
+    this.updateVelocity(timestep);
+    this.updateSize(timestep);
+    this.updatePosition(timestep);
   }
 
-  updateVelocity (timestep) {
-    for ( var point of [this.center, this.top, this.bottom, this.left, this.right]) {
-      //console.log(point);
-      point.velocity = point.velocity.add(point.acceleration.multiply(timestep));
-      //console.log(point);
+  // Disperse pressure on a boundaries to center
+  updateAcceleration (timestep) {
+    for (const point of this.boundaries) {
+      this.center.acceleration = this.center.acceleration.add(point.acceleration).multiply(0.5);
     }
   }
 
-  adjustShapeSizeToBoundaryPressure (timestep) {
+  updateVelocity (timestep) {
+    // Absorb acceleration into velocity
+    for (const point of this.points) {
+      // XXX: Edge and center friction may be different
+      point.velocity = point.velocity.add(point.acceleration.multiply(timestep).multiply(1 - Physics.Node.friction));
+      if ( point.velocity.magnitude > Physics.Node.maxSpeed ) {
+        point.velocity = point.velocity.normalise().multiply(Physics.Node.maxSpeed);
+      }
+      point.acceleration = new Vector(0,0);
+    }
+  }
+
+  updateSize (timestep) {
     this.shape.adjustSize(
-      this.top.acceleration(),
-      this.bottom.acceleration(),
-      this.left.acceleration(),
-      this.right.acceleration(),
+      this.top.velocity.y    * timestep,
+      this.bottom.velocity.y * timestep,
+      this.left.velocity.x   * timestep,
+      this.right.velocity.x  * timestep,
     );
   }
 
+  updatePosition (timestep) {
+    const center = this.center;
+    center.position = center.position.add(center.velocity.multiply(timestep));
+  }
+
+  get kineticEnergy () {
+    var energy = 0;
+    for (const point of this.points) {
+      var speed = point.velocity.magnitude;
+      energy += 0.5 * point.mass * speed * speed;
+    }
+    return energy;
+  }
 }
 
 module.exports = Node;

@@ -128,14 +128,14 @@ describe("Text", function () {
   it("should repond to pressure", function () {
     const cases = [
       [  0,  0,  0,  0, 2 ],  // No resize
-      [  1,  0,  0,  0, 3 ],  // Pull top
-      [  0,  1,  0,  0, 3 ],  // Pull bottom
-      [  0,  0,  1,  0, 1 ],  // Pull left
-      [  0,  0,  0,  1, 1 ],  // Pull right
-      [ -1,  0,  0,  0, 1 ],  // Push top
-      [  0, -1,  0,  0, 1 ],  // Push bottom
-      [  0,  0, -1,  0, 3 ],  // Push left
-      [  0,  0,  0, -1, 3 ],  // Push right
+      [ -1,  0,  0,  0, 3 ],  // Pull top
+      [  0, -1,  0,  0, 3 ],  // Pull bottom
+      [  0,  0, -1,  0, 1 ],  // Pull left
+      [  0,  0,  0, -1, 1 ],  // Pull right
+      [  1,  0,  0,  0, 1 ],  // Push top
+      [  0,  1,  0,  0, 1 ],  // Push bottom
+      [  0,  0,  1,  0, 3 ],  // Push left
+      [  0,  0,  0,  1, 3 ],  // Push right
     ];
 
     for ( let values of cases ) {

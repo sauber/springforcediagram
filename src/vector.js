@@ -27,7 +27,7 @@ class Vector {
     return new Vector((this.x / n) || 0, (this.y / n) || 0); // Avoid divide by zero errors..
   };
 
-  magnitude () {
+  get magnitude () {
     return Math.sqrt(this.x*this.x + this.y*this.y);
   };
 

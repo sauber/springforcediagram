@@ -1,4 +1,5 @@
 "use strict";
+
 const Physics = require("./physics.js");
 const Vector  = require("./vector.js");
 
@@ -17,14 +18,10 @@ class Point {
   }
 
   applyForce (force) {
-    //console.log(this);
     var mass = this.mass;
-    //console.log(mass, force);
-    // Avoid massive accelerations of light points (and divide by zero)
     if ( mass < Physics.Point.minimalMass ) {
       mass = Physics.Point.minimalMass;
     }
-    //console.log(mass, force);
     this.acceleration = this.acceleration.add(force.divide(this.mass));
   }
 }
