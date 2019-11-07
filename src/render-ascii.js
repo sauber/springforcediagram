@@ -81,7 +81,6 @@ class Render {
   plotText(midx, midy, lines) {
     var y = midy + (lines.length-1)/2;
     for ( const line of lines ) {
-      //console.log(midx - line.length/2, y);
       this.plotString(midx - line.length/2, y--, line);
     }
   }
