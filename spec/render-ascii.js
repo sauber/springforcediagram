@@ -36,7 +36,22 @@ describe("Render", function () {
     const r = new Render;
     r.plotLine(-1, -1, 2, 1);
     //console.log(r.lines);
-    //r.lines.map(x => console.log(x));
-    expect(r.lines).toEqual([ 'oo  ', '  o ', '   o' ]);
+    r.lines.map(x => console.log(x));
+    expect(r.lines).toEqual([ 
+      '   o',
+      ' oo ',
+      'o   ',
+    ]);
+
+    /*
+    // Draw 10 random lines
+    for ( var i = 0; i<10; i++ ) {
+      var l = new Render;
+      var coor = [10,10,10,10].map(c => Math.random()*c - c/2);
+      //console.log(...coor);
+      l.plotLine(...coor);
+      l.lines.map(x => console.log('|' + x + '|'));
+    }
+    */
   });
 });
