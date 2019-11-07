@@ -79,9 +79,6 @@ class Render {
 
   // Plot lines of text
   plotText(midx, midy, lines) {
-    //console.log(midx, midy, lines);
-    //const width = Math.max(...(lines.map(x => x.length)));
-    //var height = this.lines.length;
     var y = midy + (lines.length-1)/2;
     for ( const line of lines ) {
       //console.log(midx - line.length/2, y);
@@ -89,6 +86,7 @@ class Render {
     }
   }
 
+  // Render grid of chars into lines of text, topmost first
   get lines () {
     const lines = [];
     if (this.is_framed) {
