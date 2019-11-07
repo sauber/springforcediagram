@@ -21,22 +21,17 @@ describe("Render", function () {
     const r = new Render;
     r.plotString(0,0,"abc");
     expect(r.grid).toEqual({0:{0:'a'},1:{0:'b'},2:{0:'c'}});
-    //console.log(r);
-    //console.log(r.lines);
   });
 
   it("should plot boxes", function () {
     const r = new Render;
     r.plotRectangle(0, 0, 3, 2);
-    //r.lines.map(x => console.log(x));
     expect(r.lines).toEqual(['+--+', '|  |', '+--+' ]);
   });
 
   it("should plot lines", function () {
     const r = new Render;
     r.plotLine(-1, -1, 2, 1);
-    //console.log(r.lines);
-    r.lines.map(x => console.log(x));
     expect(r.lines).toEqual([ 
       '   o',
       ' oo ',
@@ -48,10 +43,39 @@ describe("Render", function () {
     for ( var i = 0; i<10; i++ ) {
       var l = new Render;
       var coor = [10,10,10,10].map(c => Math.random()*c - c/2);
-      //console.log(...coor);
       l.plotLine(...coor);
       l.lines.map(x => console.log('|' + x + '|'));
     }
     */
+  });
+
+  it("should plot text block", function () {
+    const r = new Render;
+    r.plotText(0, 0, ['a cat','in the','hat']);
+    expect(r.lines).toEqual([
+      'a cat ',
+      'in the',
+      ' hat  ',
+    ]);
+
+    /*
+    // Draw text 10 times at random coordinates
+    for ( var i = 0; i<10; i++ ) {
+      var l = new Render;
+      var coor = [10,10].map(c => Math.random()*c - c/2);
+      l.plotText(...coor, ['a cat','in','the hat']);
+      l.framed.lines.map(x => console.log(x));
+    }
+    */
+  });
+
+  it("may draw a frame", function () {
+    const r = new Render;
+    r.plotChar(0,0,'x');
+    expect(r.framed.lines).toEqual([
+     ',-.',
+     '|x|',
+     "`-'",
+    ]);
   });
 });

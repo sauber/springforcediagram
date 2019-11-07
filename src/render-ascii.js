@@ -9,6 +9,12 @@ class Render {
     this.maxx = undefined;
     this.miny = undefined;
     this.maxy = undefined;
+    this.is_framed = undefined;
+  }
+
+  get framed () {
+    this.is_framed = 1;
+    return this;
   }
 
   plotChar (x, y, char) {
@@ -71,8 +77,29 @@ class Render {
     }
   }
 
+  // Plot lines of text
+  plotText(midx, midy, lines) {
+    //console.log(midx, midy, lines);
+    //const width = Math.max(...(lines.map(x => x.length)));
+    //var height = this.lines.length;
+    var y = midy + (lines.length-1)/2;
+    for ( const line of lines ) {
+      //console.log(midx - line.length/2, y);
+      this.plotString(midx - line.length/2, y--, line);
+    }
+  }
+
   get lines () {
     const lines = [];
+    if (this.is_framed) {
+      // Bottom line
+      var line = '`';
+      for ( var x = this.minx ; x <= this.maxx ; x++ ) {
+        line += '-';
+      }
+      line += "'";
+      lines.unshift(line);
+    }
     for ( var y = this.miny ; y <= this.maxy ; y++ ) {
       var line = '';
       for ( var x = this.minx ; x <= this.maxx ; x++ ) {
@@ -82,6 +109,16 @@ class Render {
           line += ' ';
         }
       }
+      if (this.is_framed) line = '|' + line + '|';
+      lines.unshift(line);
+    }
+    if (this.is_framed) {
+      // Top line
+      var line = ',';
+      for ( var x = this.minx ; x <= this.maxx ; x++ ) {
+        line += '-';
+      }
+      line += ".";
       lines.unshift(line);
     }
     return lines;
