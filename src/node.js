@@ -11,7 +11,7 @@ const Vector    = require("./vector");
 const Physics   = require("./physics.js");
 
 class Node {
-  constructor (value = undefined, x = 0, y = 0) {
+  constructor (value = undefined, x = 0, y = 0, width = 0, height = 0) {
     this.value = value;
 
     // Value is assumed to be text
@@ -19,7 +19,7 @@ class Node {
       var parent = this;
       this.shape = new Text(function () { return parent.value });
     } else {
-      this.shape = new Rectangle();
+      this.shape = new Rectangle(width, height);
     }
 
     var node = this;
@@ -30,15 +30,13 @@ class Node {
     const startpos = new Vector(x, y);
     //console.log(startpos);
     this.center = new Point(startpos, dynamic_mass);  // Middle
-    this.top    = new Point(startpos, dynamic_mass);  // Top center
-    this.bottom = new Point(startpos, dynamic_mass);  // Bottom center
-    this.left   = new Point(startpos, dynamic_mass);  // Left center
-    this.right  = new Point(startpos, dynamic_mass);  // Right center
+    this.top    = new Point(new Vector(x, y+height/2), dynamic_mass);  // Top center
+    this.bottom = new Point(new Vector(x, y-height/2), dynamic_mass);  // Bottom center
+    this.left   = new Point(new Vector(x-width/2, y), dynamic_mass);  // Left center
+    this.right  = new Point(new Vector(x+width/2, y), dynamic_mass);  // Right center
 
     this.children = [];
   }
-
-  // Empty node a random position
 
   add (...children) {
     for (let child of children) {
@@ -72,6 +70,31 @@ class Node {
       this.left,
       this.right,
       this.center,
+    ];
+  }
+
+  get vertices () {
+    return [
+      // Top
+      new Vector(
+        this.left.position.x,  this.top.position.y,
+        this.right.position.x, this.top.position.y,
+      ),
+      // Bottom
+      new Vector(
+        this.left.position.x,  this.bottom.position.y,
+        this.right.position.x, this.bottom.position.y,
+      ),
+      // Left
+      new Vector(
+        this.left.position.x, this.bottom.position.y,
+        this.left.position.x, this.top.position.y,
+      ),
+      // Right
+      new Vector(
+        this.right.position.x, this.bottom.position.y,
+        this.right.position.x, this.top.position.y,
+      )
     ];
   }
 
@@ -166,8 +189,19 @@ class Node {
 }
 
 // Node at random position
-Node.random = function (label = undefined) {
-  return new Node(label, Math.random()*2-1, Math.random()*2-1);
+Node.random = function (size = 0, label = undefined) {
+  var node = new Node(label, Math.random()*2-1, Math.random()*2-1);
+  return node;
+  /*
+  var dynamic_mass = function () {
+    // There are five points, each weighing 20% of whole body.
+    return node.area / 5;
+  }
+  node.top = new Vector(
+    node.center.position.x,
+    node.center.position.x,
+  );
+  */
 }
 
 module.exports = Node;

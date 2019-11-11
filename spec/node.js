@@ -24,6 +24,17 @@ describe("Node", function () {
     expect(node.size).toEqual( new Vector(16,1) );
   });
 
+  it("may have an initial random position", function () {
+    const node = new Node.random();
+    expect(node.center.position.x).not.toBe(0);
+    expect(node.center.position.y).not.toBe(0);
+  });
+
+  it("may have an initial size", function () {
+    const node = new Node(undefined, undefined, undefined, 5, 2);
+    expect(node.area).toBe(10);
+  });
+
   // Apply force to a boundary edge
   it("should accept pressure", function () {
     // Setup

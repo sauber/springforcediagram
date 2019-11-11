@@ -46,7 +46,14 @@ describe("Diagram", function () {
     expect(node.center.velocity).not.toEqual(v0);
   });
 
-  it("should run an animation step", function () {
+  it("should have expulsion between nearby nodes", function () {
+    const dia = new Diagram;
+    const nodea = dia.addNode("a");
+    const nodeb = dia.addNode("b");
+    // TBD
+  });
+  
+  it("can run an animation step", function () {
     const dia = new Diagram;
     //const nodea = dia.addNode(undefined, Math.random(), Math.random());
     //const nodeb = dia.addNode(undefined, Math.random(), Math.random());
