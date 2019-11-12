@@ -13,7 +13,6 @@ const Physics   = require("./physics.js");
 class Node {
   constructor (value = undefined, x = 0, y = 0, width = 0, height = 0) {
     this.value = value;
-    this.position = new Vector(x,y);
 
     // Value is assumed to be text
     if ( value ) {
@@ -28,25 +27,7 @@ class Node {
       // There are five points, each weighing 20% of whole body.
       return node.area / 5;
     }
-    //const startpos = new Vector(x, y);
-    //console.log(startpos);
-
-    //var topposition = {
-    //  get x () { node.position.x },
-    //  get y () { node.position.y + node.shape.height/2 },
-    //}
-
-    // Middle
-    this.center = new Point(
-      // Position
-      //{
-      //  get x () { node.position.x },
-      //  get y () { node.position.y + node.shape.height/2 }
-      //},
-      this.position,
-      // Mass
-      dynamic_mass
-    );
+    this.center = new Point(new Vector(x,y), dynamic_mass); // Middle
     this.top    = new Point(undefined, dynamic_mass);  // Top center
     this.bottom = new Point(undefined, dynamic_mass);  // Bottom center
     this.left   = new Point(undefined, dynamic_mass);  // Left center
@@ -61,6 +42,11 @@ class Node {
     }
     return this;
   }
+
+  get min_x () { return this.center.position.x - this.shape.width /2 }
+  get min_y () { return this.center.position.y - this.shape.height/2 }
+  get max_x () { return this.center.position.x + this.shape.width /2 }
+  get max_y () { return this.center.position.y + this.shape.height/2 }
 
   // Size of node
   get size () {

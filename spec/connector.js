@@ -19,7 +19,7 @@ describe("Connector", function () {
     const nodea = Node.random();
     const nodeb = Node.random();
     var conn = new Connector(nodea, nodeb);
-    //console.log(conn.intersectionPoints);
+    console.log(conn.intersectionPoints);
     //expect(conn.centerDistance.x).toBeGreaterThan(0);
     //expect(conn.centerDistance.y).toBeGreaterThan(0);
   });

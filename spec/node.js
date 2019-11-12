@@ -10,6 +10,10 @@ describe("Node", function () {
     expect(node.children.length).toBe(0);
     expect(node.center.position.x).toBe(0);
     expect(node.center.position.y).toBe(0);
+    expect(node.min_x).toBe(0);
+    expect(node.min_y).toBe(0);
+    expect(node.max_x).toBe(0);
+    expect(node.max_y).toBe(0);
   });
 
   it("should allow adding child nodes", function () {
@@ -32,8 +36,12 @@ describe("Node", function () {
   });
 
   it("may have an initial size", function () {
-    const node = new Node(undefined, undefined, undefined, 5, 2);
-    expect(node.area).toBe(10);
+    const node = new Node(undefined, undefined, undefined, 4, 2);
+    expect(node.area).toBe(8);
+    expect(node.min_x).toBe(-2);
+    expect(node.min_y).toBe(-1);
+    expect(node.max_x).toBe(2);
+    expect(node.max_y).toBe(1);
   });
 
   // Apply force to a boundary edge

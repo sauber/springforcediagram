@@ -1,7 +1,7 @@
 "use strict";
 
-const Node = require("./node.js");
-const Edge = require("./edge.js");
+const Node      = require("./node.js");
+const Connector = require("./connector.js");
 
 class Diagram {
   constructor () { 
@@ -22,9 +22,9 @@ class Diagram {
   }
 
   addEdge (node1, node2) {
-    const edge = new Edge(node1, node2);
-    this.edges.push(edge);
-    return edge;
+    const conn = new Connector(node1, node2);
+    this.edges.push(conn);
+    return conn;
   }
 
   step (timestep = 1) {
