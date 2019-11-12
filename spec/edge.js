@@ -19,7 +19,7 @@ describe("Edge", function () {
     const nodea = Node.random();
     const nodeb = Node.random();
     var edge = new Edge(nodea, nodeb);
-    console.log(edge.intersectionPoints);
+    //console.log(edge.intersectionPoints);
     //expect(edge.centerDistance.x).toBeGreaterThan(0);
     //expect(edge.centerDistance.y).toBeGreaterThan(0);
   });
