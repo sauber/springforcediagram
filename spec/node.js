@@ -8,7 +8,8 @@ describe("Node", function () {
 
     expect(node.area).toBe(0);
     expect(node.children.length).toBe(0);
-    expect(node.center.position).toEqual( new Vector(0,0) );
+    expect(node.center.position.x).toBe(0);
+    expect(node.center.position.y).toBe(0);
   });
 
   it("should allow adding child nodes", function () {
