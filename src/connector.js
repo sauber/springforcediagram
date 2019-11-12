@@ -2,7 +2,7 @@
 
 const Vector = require("../src/vector");
 
-class Edge {
+class Connector {
   constructor (node0, node1) { 
     this.node0 = node0;
     this.node1 = node1;
@@ -105,4 +105,4 @@ class Edge {
 
 }
 
-module.exports = Edge;
+module.exports = Connector;
