@@ -17,7 +17,7 @@ class Node {
     // Value is assumed to be text
     if ( value ) {
       var parent = this;
-      this.shape = new Text(function () { return parent.value });
+      this.shape = new Text(value);
     } else {
       this.shape = new Rectangle(width, height);
     }

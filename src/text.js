@@ -1,18 +1,18 @@
 "use strict";
 
 class Text {
-  constructor (value_callback = function () { return ''}, desired_line_count = 1) {
+  constructor (value = '', desired_line_count = 1) {
     // Parent enclosing node
-    this.value = value_callback;
+    this.value = value;
 
     // Number of desired lines in rendered output
     this.desired_line_count = desired_line_count;
   }
 
   get words () {
-    const text = this.value();
+    const text = this.value;
     if ( text.match(/\S+/) ) {
-      return this.value().trim().split(/\s+/);
+      return text.trim().split(/\s+/);
     } else {
       return [];
     }
