@@ -2,9 +2,16 @@ const Rectangle = require("../src/rectangle");
 
 describe("Rectangle", function () {
   it("should allow empty instantiation", function () {
-    var box = new Rectangle;
-    expect(box.width ).toBe(0);
-    expect(box.height).toBe(0);
+    var rect = new Rectangle;
+    expect(rect.width ).toBe(0);
+    expect(rect.height).toBe(0);
+  });
+
+  it("may not haver negative size", function () {
+    var rect = new Rectangle;
+    rect.adjustSize(-1, -1, -1, -1);
+      expect(rect.width ).toBe(0);
+      expect(rect.height).toBe(0);
   });
 
   it("should allow resizing", function () {

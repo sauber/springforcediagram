@@ -19,6 +19,20 @@ class Rectangle {
     this.width  += left + right;
     this.height += top  + bottom;
   }
+
+  get width () { return this._width }
+
+  set width (value) {
+    if (value<0) value=0;
+    this._width = value;
+  }
+
+  get height () { return this._height }
+
+  set height (value) {
+    if (value<0) value=0;
+    this._height = value;
+  }
 }
 
 module.exports = Rectangle;
