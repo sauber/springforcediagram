@@ -41,4 +41,9 @@ class Vector {
 
 }
 
+// Random direction of magnitude 1
+Vector.random = function () {
+  return new Vector(Math.random(), Math.random()).normalise();
+}
+
 module.exports = Vector;
