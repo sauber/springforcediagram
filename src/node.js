@@ -11,13 +11,13 @@ const Vector    = require("./vector");
 const Physics   = require("./physics.js");
 
 class Node {
-  constructor (value = undefined, x = 0, y = 0, width = 0, height = 0) {
-    this.value = value;
+  constructor (label = undefined, x = 0, y = 0, width = 0, height = 0) {
+    this.label = label;
 
     // Value is assumed to be text
-    if ( value ) {
+    if ( label ) {
       var parent = this;
-      this.shape = new Text(value);
+      this.shape = new Text(label);
     } else {
       this.shape = new Rectangle(width, height);
     }
@@ -194,19 +194,9 @@ class Node {
 }
 
 // Node at random position
-Node.random = function (size = 0, label = undefined) {
-  var node = new Node(label, Math.random()*2-1, Math.random()*2-1);
+Node.random = function (label = undefined, width = 0, height = 0) {
+  var node = new Node(label, Math.random()*2-1, Math.random()*2-1, width, height);
   return node;
-  /*
-  var dynamic_mass = function () {
-    // There are five points, each weighing 20% of whole body.
-    return node.area / 5;
-  }
-  node.top = new Vector(
-    node.center.position.x,
-    node.center.position.x,
-  );
-  */
 }
 
 module.exports = Node;

@@ -15,8 +15,14 @@ describe("Line", function () {
 
   it("should have distance between two different points", function () {
     const line = new Line(new Vector.random(), new Vector.random());
-    console.log(line.distance);
-    expect(line.distance.magnitude.x).not.toBe(0);
+    expect(line.distance.magnitude).toBeGreaterThan(0);
   });
 
+  it("should have a middle point", function () {
+    const line = new Line(
+      new Vector(1,1),
+      new Vector(5,3),
+    );
+    expect(line.middle).toEqual(new Vector(3,2));
+  });
 });

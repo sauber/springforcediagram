@@ -16,6 +16,13 @@ class Line {
       this.b.y - this.a.y,
     );
   }
+
+  get middle () {
+    return new Vector(
+      (this.a.x + this.b.x)/2,
+      (this.a.y + this.b.y)/2,
+    );
+  }
 }
 
 module.exports = Line;

@@ -1,6 +1,7 @@
 "use strict";
 
-const Vector = require("../src/vector");
+const Vector = require("./vector");
+const Line   = require("./line");
 
 class Connector {
   constructor (node0, node1) { 
@@ -8,11 +9,9 @@ class Connector {
     this.node1 = node1;
   }
 
-  get centerDistance () {
-    return new Vector(
-      this.node1.center.position.x - this.node0.center.position.x,
-      this.node1.center.position.y - this.node0.center.position.y,
-    );
+  // A line from center to center
+  get centers () {
+    return new Line(this.node1.center.position, this.node0.center.position);
   }
 
   LSegsIntersectionPoint (ps1, pe1, ps2, pe2) {
@@ -25,6 +24,7 @@ class Connector {
 
     // Get delta and check if the lines are parallel
     var delta = A1*B2 - A2*B1;
+    //console.log(delta, ps1, pe2,  ps2, pe2);
     if(delta == 0) return null;
 
     // Get C of first and second lines
@@ -38,7 +38,7 @@ class Connector {
 
   LSegRec_IntersPoint_v02(p1, p2, min_x, min_y, max_x, max_y) {
     var intersection;
-    console.log(p1, p2, min_x, min_y, max_x, max_y);
+    //console.log(p1, p2, min_x, min_y, max_x, max_y);
 
     if (p2.x <= min_x) //If the second point of the segment is at left/bottom-left/top-left of the AABB
     {
@@ -47,14 +47,16 @@ class Connector {
       {
         intersection = this.LSegsIntersectionPoint(p1, p2, new Vector(min_x, min_y), new Vector(max_x, min_y));
         if (intersection == null) intersection = this.LSegsIntersectionPoint(p1, p2, new Vector(min_x, min_y), new Vector(min_x, max_y));
-        console.log("Bottom left");
+        //console.log("Bottom left");
+        //console.log(intersection);
         return intersection;
       }
       else //if p2.y > max_y, i.e. if it is at the top-left
       {
         intersection = this.LSegsIntersectionPoint(p1, p2, new Vector(min_x, max_y), new Vector(max_x, max_y));
         if (intersection == null) intersection = this.LSegsIntersectionPoint(p1, p2, new Vector(min_x, min_y), new Vector(min_x, max_y));
-        console.log("Top left");
+        //console.log("Top left");
+        //console.log(intersection);
         return intersection;
       }
     }
@@ -66,30 +68,32 @@ class Connector {
       {
         intersection = this.LSegsIntersectionPoint(p1, p2, new Vector(min_x, min_y), new Vector(max_x, min_y));
         if (intersection == null) intersection = this.LSegsIntersectionPoint(p1, p2, new Vector(max_x, min_y), new Vector(max_x, max_y));
-        console.log("Bottom right");
+        //console.log("Bottom right");
+        //console.log(intersection);
         return intersection;
       }
       else //if p2.y > max_y, i.e. if it is at the top-left
       {
         intersection = this.LSegsIntersectionPoint(p1, p2, new Vector(min_x, max_y), new Vector(max_x, max_y));
         if (intersection == null) intersection = this.LSegsIntersectionPoint(p1, p2, new Vector(max_x, min_y), new Vector(max_x, max_y));
-        console.log("Top right");
+        //console.log("Top right");
+        //console.log(intersection);
         return intersection;
       }
     }
 
     else //If the second point of the segment is at top/bottom of the AABB
     {
-      console.log("Somewhere else");
+      //console.log("Somewhere else");
       if (p2.y <= min_y) return this.LSegsIntersectionPoint(p1, p2, new Vector(min_x, min_y), new Vector(max_x, min_y)); //If it is at the bottom
       if (p2.y >= max_y) return this.LSegsIntersectionPoint(p1, p2, new Vector(min_x, max_y), new Vector(max_x, max_y)); //If it is at the top
     }
 
-    console.log("Nowhere");
+    //console.log("Nowhere");
     return null;
   }
 
-  get intersectionPoints () {
+  get intersections () {
     /*
     console.log(
         this.node0.center.position,
@@ -108,24 +112,35 @@ class Connector {
         this.node1.max_y,
     );
     */
-    return [
-      this.LSegRec_IntersPoint_v02(
+    var node0_intersection;
+    if ( this.node0.area == 0 ) {
+      node0_intersection = this.node0.center.position;
+    } else {
+      node0_intersection = this.LSegRec_IntersPoint_v02(
         this.node0.center.position,
         this.node1.center.position,
         this.node0.min_x,
         this.node0.min_y,
         this.node0.max_x,
         this.node0.max_y,
-      ),
-      this.LSegRec_IntersPoint_v02(
-        this.node0.center.position,
+      );
+    }
+
+    var node1_intersection;
+    if ( this.node1.area == 0 ) {
+      node1_intersection = this.node1.center.position;
+    } else {
+      node1_intersection = this.LSegRec_IntersPoint_v02(
         this.node1.center.position,
+        this.node0.center.position,
         this.node1.min_x,
         this.node1.min_y,
         this.node1.max_x,
         this.node1.max_y,
-      ),
-    ];
+      );
+    }
+
+    return new Line(node0_intersection, node1_intersection);
   }
 
 }
