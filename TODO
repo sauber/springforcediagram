@@ -1,1 +1,2 @@
 * Node geometry should be derived from the underlying shape
+* Center point should move from node to shape

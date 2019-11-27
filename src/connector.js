@@ -1,7 +1,8 @@
 "use strict";
 
-const Vector = require("./vector");
-const Line   = require("./line");
+const Vector    = require("./vector");
+const Line      = require("./line");
+const Rectangle = require("./rectangle");
 
 class Connector {
   constructor (node0, node1) { 
@@ -93,6 +94,25 @@ class Connector {
     return null;
   }
 
+  // The new rectangle that is intersection of two original rectangles
+  get overlap () {
+    //int x = Math.Max(a.X, b.X);
+    const x = Math.max(this.node0.min_x, this.node1.min_x);
+    //int num1 = Math.Min(a.X + a.Width, b.X + b.Width);
+    const num1 = Math.min(this.node0.max_x, this.node1.max_x);
+    //int y = Math.Max(a.Y, b.Y);
+    const y = Math.max(this.node0.min_y, this.node1.min_y);
+    //int num2 = Math.Min(a.Y + a.Height, b.Y + b.Height);
+    const num2 = Math.min(this.node0.max_y, this.node1.max_y);
+    if (num1 >= x && num2 >= y)
+      //return new Rectangle(x, y, num1 - x, num2 - y);
+      return new Rectangle(num1 - 2*x, num2 - 2*y);
+    else
+      // There is no overlap
+      return null;
+  }
+
+  // The line connecting intersections
   get intersections () {
     /*
     console.log(
@@ -112,6 +132,11 @@ class Connector {
         this.node1.max_y,
     );
     */
+
+    if ( this.overlap ) {
+      //console.log("There is overlap of nodes" + this.overlap);
+    }
+
     var node0_intersection;
     if ( this.node0.area == 0 ) {
       node0_intersection = this.node0.center.position;

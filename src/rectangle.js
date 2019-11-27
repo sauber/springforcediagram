@@ -1,5 +1,6 @@
 // May draw inspiration from
 //   https://github.com/alexbol99/flatten-js/blob/master/src/classes/box.js
+//   https://dxr.mozilla.org/mozilla-beta/source/toolkit/modules/Geometry.jsm
 
 "use strict";
 

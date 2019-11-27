@@ -49,7 +49,25 @@ describe("Connector", function () {
     //console.log(conn.intersections);
     // XXX Need expect cases
 
-    // XXX Need a case where centers are located exactly on edges
+    // Centers are located exactly on edges
+    /*
+      5+-------+
+      4|   +-------+
+      3|   a   :   |
+      2|   |   b   |
+      1+---|~~~'   |
+      0    +-------+
+       0   2   4   6
+    */
+    var nodea = new Node(undefined, 2, 3, 4, 4);
+    var nodeb = new Node(undefined, 4, 2, 4, 4);
+    var conn = new Connector(nodea, nodeb);
+    var ee = conn.intersections;
+    //console.log(ee);
+    expect(ee.a.x).toBe(4);
+    expect(ee.a.y).toBe(2);
+    expect(ee.b.x).toBe(2);
+    expect(ee.b.y).toBe(3);
 
     /*
       Both centers are outside edges and edges overlap
@@ -74,6 +92,24 @@ describe("Connector", function () {
     expect(ee.b.x).toBeCloseTo(3.00, 2);
     expect(ee.b.y).toBeCloseTo(3.33, 2);
     // XXX Need to indicate that line is inside nodes, ie. the  distance is negative
+
+    /*
+      When edges touch, intersection points overlap
+      6+-------+
+       |       |
+      4|   a   +-------+
+       |       *       |
+      2+-------|   b   |
+      1        |       |
+      0        +-------+
+       0   2   4   6   8
+    */
+    var nodea = new Node(undefined, 2, 4, 4, 4);
+    var nodeb = new Node(undefined, 6, 2, 4, 4);
+    var conn = new Connector(nodea, nodeb);
+    var ee = conn.intersections;
+    //console.log(ee);
+    expect(ee.a).toEqual(ee.b);
 
     /*
       No overlap of edges
