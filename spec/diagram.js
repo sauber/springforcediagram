@@ -31,7 +31,7 @@ describe("Diagram", function () {
     const node = dia.addNode();
     dia.attractToCenter();
     const v0 = new Vector(0,0);
-    expect(node.center.position).toEqual(v0);
+    expect(node.position).toEqual(v0);
     expect(node.center.velocity).toEqual(v0);
   });
 
@@ -42,7 +42,7 @@ describe("Diagram", function () {
     dia.attractToCenter();
     node.step();
     const v0 = new Vector(0,0);
-    expect(node.center.position).not.toEqual(v0);
+    expect(node.position).not.toEqual(v0);
     expect(node.center.velocity).not.toEqual(v0);
   });
 

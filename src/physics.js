@@ -6,7 +6,7 @@ class Physics {
 }
 
 // Point physical thresholds
-Physics.Point = {
+Physics.Pressure = {
   minimalMass: 0.3
 };
 

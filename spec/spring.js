@@ -1,12 +1,12 @@
 const SpringType = require("../src/springtype");
-const Point      = require("../src/point");
+const Pressure   = require("../src/pressure");
 const Spring     = require("../src/spring");
 
 describe("Spring", function () {
   const length = 1;
   const stiffness = 0.5;
-  const point1 = new Point(0, 0);
-  const point2 = new Point(1, 0);
+  const point1 = new Pressure(0, 0);
+  const point2 = new Pressure(1, 0);
   const type = new SpringType(length, stiffness);
 
   it("should instantiate", function () {

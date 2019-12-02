@@ -43,7 +43,7 @@ class Diagram {
   attractToCenter () {
     for ( let node of this.nodes ) {
       node.center.applyForce(
-        node.center.position.normalise().multiply(-1)
+        node.position.normalise().multiply(-1)
       );
     }
   }

@@ -6,9 +6,9 @@
 
 const Text      = require("./text");
 const Rectangle = require("./rectangle");
-const Point     = require("./point");
+const Pressure  = require("./pressure");
 const Vector    = require("./vector");
-const Physics   = require("./physics.js");
+const Physics   = require("./physics");
 
 class Node {
   constructor (label = undefined, x = 0, y = 0, width = 0, height = 0) {
@@ -16,7 +16,6 @@ class Node {
 
     // Value is assumed to be text
     if ( label ) {
-      var parent = this;
       this.shape = new Text(label);
     } else {
       this.shape = new Rectangle(width, height);
@@ -25,13 +24,14 @@ class Node {
     var node = this;
     var dynamic_mass = function () {
       // There are five points, each weighing 20% of whole body.
-      return node.area / 5;
+      return node.shape.area / 5;
     }
-    this.center = new Point(new Vector(x,y), dynamic_mass); // Middle
-    this.top    = new Point(undefined, dynamic_mass);  // Top center
-    this.bottom = new Point(undefined, dynamic_mass);  // Bottom center
-    this.left   = new Point(undefined, dynamic_mass);  // Left center
-    this.right  = new Point(undefined, dynamic_mass);  // Right center
+    this.position = new Vector(x, y);
+    this.center = new Pressure(dynamic_mass);  // Middle
+    this.top    = new Pressure(dynamic_mass);  // Top center
+    this.bottom = new Pressure(dynamic_mass);  // Bottom center
+    this.left   = new Pressure(dynamic_mass);  // Left center
+    this.right  = new Pressure(dynamic_mass);  // Right center
 
     this.children = [];
   }
@@ -43,19 +43,21 @@ class Node {
     return this;
   }
 
-  get min_x () { return this.center.position.x - this.shape.width /2 }
-  get min_y () { return this.center.position.y - this.shape.height/2 }
-  get max_x () { return this.center.position.x + this.shape.width /2 }
-  get max_y () { return this.center.position.y + this.shape.height/2 }
+  get min_x () { return this.position.x - this.shape.width /2 }
+  get min_y () { return this.position.y - this.shape.height/2 }
+  get max_x () { return this.position.x + this.shape.width /2 }
+  get max_y () { return this.position.y + this.shape.height/2 }
 
   // Size of node
   get size () {
     return new Vector(this.shape.width, this.shape.height);
   }
 
+  /*
   get area () {
     return this.size.x * this.size.y;
   }
+  */
 
   get boundaries () {
     return [
@@ -178,8 +180,7 @@ class Node {
   }
 
   updatePosition (timestep = 1) {
-    const center = this.center;
-    center.position = center.position.add(center.velocity.multiply(timestep));
+    this.position = this.position.add(this.center.velocity.multiply(timestep));
   }
 
   get kineticEnergy () {
@@ -191,6 +192,8 @@ class Node {
     }
     return energy;
   }
+
+
 }
 
 // Node at random position

@@ -6,8 +6,10 @@
 
 class Rectangle {
   constructor (width = 0, height = 0) {
-    this.width  = width;
-    this.height = height;
+    //this.x      = x; // Center x
+    //this.y      = y; // Center y
+    this._width  = width;
+    this._height = height;
   }
 
   // For rectangle box, it becomes wider or taller
@@ -19,6 +21,8 @@ class Rectangle {
   adjustSize (top, bottom, left, right) {
     this.width  += left + right;
     this.height += top  + bottom;
+    //this.x += (top  - bottom)/2;
+    //this.y += (left - right )/2;
   }
 
   get width () { return this._width }
@@ -34,6 +38,19 @@ class Rectangle {
     if (value<0) value=0;
     this._height = value;
   }
+
+  get area () {
+    return this._width * this._height;
+  }
+
+  /*
+  get min_x () { return this.x - this.width /2 }
+  get min_y () { return this.y - this.height/2 }
+  get max_x () { return this.x + this.width /2 }
+  get max_y () { return this.y + this.height/2 }
+  */
+
+  get area () { return this.width * this.height }
 }
 
 module.exports = Rectangle;

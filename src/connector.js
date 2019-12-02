@@ -12,7 +12,7 @@ class Connector {
 
   // A line from center to center
   get centers () {
-    return new Line(this.node1.center.position, this.node0.center.position);
+    return new Line(this.node1.position, this.node0.position);
   }
 
   LSegsIntersectionPoint (ps1, pe1, ps2, pe2) {
@@ -116,16 +116,16 @@ class Connector {
   get intersections () {
     /*
     console.log(
-        this.node0.center.position,
-        this.node1.center.position,
+        this.node0.position,
+        this.node1.position,
         this.node0.min_x,
         this.node0.min_y,
         this.node0.max_x,
         this.node0.max_y,
     );
     console.log(
-        this.node0.center.position,
-        this.node1.center.position,
+        this.node0.position,
+        this.node1.position,
         this.node1.min_x,
         this.node1.min_y,
         this.node1.max_x,
@@ -139,11 +139,11 @@ class Connector {
 
     var node0_intersection;
     if ( this.node0.area == 0 ) {
-      node0_intersection = this.node0.center.position;
+      node0_intersection = this.node0.position;
     } else {
       node0_intersection = this.LSegRec_IntersPoint_v02(
-        this.node0.center.position,
-        this.node1.center.position,
+        this.node0.position,
+        this.node1.position,
         this.node0.min_x,
         this.node0.min_y,
         this.node0.max_x,
@@ -153,11 +153,11 @@ class Connector {
 
     var node1_intersection;
     if ( this.node1.area == 0 ) {
-      node1_intersection = this.node1.center.position;
+      node1_intersection = this.node1.position;
     } else {
       node1_intersection = this.LSegRec_IntersPoint_v02(
-        this.node1.center.position,
-        this.node0.center.position,
+        this.node1.position,
+        this.node0.position,
         this.node1.min_x,
         this.node1.min_y,
         this.node1.max_x,

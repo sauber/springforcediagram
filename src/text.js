@@ -95,6 +95,10 @@ class Text {
     return this.lines.length;
   }
 
+  get area () {
+    return this.width * this.height;
+  }
+
   // For text box, it becomes more narrow when becoming taller
   // Input:
   //   top    = amount top should rise
