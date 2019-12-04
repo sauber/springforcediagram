@@ -39,6 +39,13 @@ class Vector {
     return this.divide(this.magnitude);
   };
 
+  equals ( vector ) {
+    return (
+      this.x == vector.x &&
+      this.y == vector.y
+    );
+  }
+
 }
 
 // Random direction of magnitude 1

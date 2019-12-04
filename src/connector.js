@@ -94,22 +94,16 @@ class Connector {
     return null;
   }
 
-  // The new rectangle that is intersection of two original rectangles
-  get overlap () {
-    //int x = Math.Max(a.X, b.X);
-    const x = Math.max(this.node0.min_x, this.node1.min_x);
-    //int num1 = Math.Min(a.X + a.Width, b.X + b.Width);
-    const num1 = Math.min(this.node0.max_x, this.node1.max_x);
-    //int y = Math.Max(a.Y, b.Y);
-    const y = Math.max(this.node0.min_y, this.node1.min_y);
-    //int num2 = Math.Min(a.Y + a.Height, b.Y + b.Height);
-    const num2 = Math.min(this.node0.max_y, this.node1.max_y);
-    if (num1 >= x && num2 >= y)
-      //return new Rectangle(x, y, num1 - x, num2 - y);
-      return new Rectangle(num1 - 2*x, num2 - 2*y);
-    else
-      // There is no overlap
-      return null;
+  get isOverlap () {
+    const r1 = this.node0;
+    const r2 = this.node1;
+
+    return (
+      r1.min_x < r2.max_x &&
+      r2.min_x < r1.max_x &&
+      r1.min_y < r2.max_y &&
+      r2.min_y < r1.max_y
+    );
   }
 
   // The line connecting intersections
@@ -132,10 +126,6 @@ class Connector {
         this.node1.max_y,
     );
     */
-
-    if ( this.overlap ) {
-      //console.log("There is overlap of nodes" + this.overlap);
-    }
 
     var node0_intersection;
     if ( this.node0.area == 0 ) {
@@ -166,6 +156,93 @@ class Connector {
     }
 
     return new Line(node0_intersection, node1_intersection);
+  }
+
+
+  /*
+    When both center points are inside rectangles, then 
+    line between centers need to be projected until reaching
+    a vertice. The magnitude is negative.
+
+      5+-------+
+       |+-o-----+
+      3||  \   :|
+      2||   \  :|
+       +|~~~~o~'|
+      0 +-------+
+       0   2 3   5
+  */
+  get projectedIntersection () {
+    return new Line(
+      this.projectedBack(this.node0, this.node1),
+      this.projectedBack(this.node1, this.node0),
+    );
+  }
+
+  projectedBack ( r1, r2 ) {
+    const ax = r1.position.x;
+    const ay = r1.position.y;
+    const bx = r2.position.x;
+    const by = r2.position.y;
+    //const r1 = this.node0;
+    //const r2 = this.node1;
+
+    if ( r1.position.equals(r2.position) ) {
+      throw("Node centers are on top of each other");
+    }
+
+    // Try above
+    if ( by > ay ) {
+      //console.log("Trying above");
+      const hy = by - ay;       // Y distance from r1 to r2
+      const fy = r1.max_y - ay; // Y distance to top of r1
+      const hx = bx - ax;       // X distance from r1 to r2
+      const fx = ax + hx / hy * fy;
+      if ( fx >= r1.min_x && fx <= r1.max_x ) {
+        //console.log(hy, fy, hx, fx);
+        return new Vector(fx, r1.max_y);
+      }
+    }
+
+    // Try below
+    if ( by < ay ) {
+      //console.log("Trying below");
+      const hy = ay - by;       // Y distance from r1 to r2
+      const fy = ay - r1.min_y; // Y distance to bottom of r1
+      const hx = bx - ax;       // X distance from r1 to r2
+      const fx = ax + hx / hy * fy;
+      if ( fx >= r1.min_x && fx <= r1.max_x ) {
+        //console.log(hy, fy, hx, fx);
+        return new Vector(fx, r1.min_y);
+      }
+    }
+
+    // Try to the left
+    if ( bx < ax ) {
+      //console.log("Trying left");
+      const hx = ax - bx;       // X distance from r1 to r2
+      const fx = ax - r1.min_x; // X distance to left of r1
+      const hy = by - ay;       // Y distance from r1 to r2
+      const fy = ay + hy / hx * fx;
+      if ( fy >= r1.min_y && fy <= r1.max_y ) {
+        //console.log(hy, fy, hx, fx);
+        return new Vector(r1.min_x, fy);
+      }
+    }
+
+    // Try to the right
+    if ( bx > ax ) {
+      //console.log("Trying right");
+      const hx = bx - ax;       // X distance from r1 to r2
+      const fx = r1.max_x - ax; // X distance to right of r1
+      const hy = by - ay;       // Y distance from r1 to r2
+      const fy = ay + hy / hx * fx;
+      if ( fy >= r1.min_y && fy <= r1.max_y ) {
+        //console.log(hy, fy, hx, fx);
+        return new Vector(r1.max_x, fy);
+      }
+    }
+
   }
 
 }
