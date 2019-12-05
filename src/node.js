@@ -12,8 +12,6 @@ const Physics   = require("./physics");
 
 class Node {
   constructor (label = undefined, x = 0, y = 0, width = 0, height = 0) {
-    this.label = label;
-
     // Value is assumed to be text
     if ( label ) {
       this.shape = new Text(label);
@@ -78,32 +76,29 @@ class Node {
     ];
   }
 
-  /*
-  get vertices () {
-    return [
-      // Top
-      new Vector(
-        this.left.position.x,  this.top.position.y,
-        this.right.position.x, this.top.position.y,
-      ),
-      // Bottom
-      new Vector(
-        this.left.position.x,  this.bottom.position.y,
-        this.right.position.x, this.bottom.position.y,
-      ),
-      // Left
-      new Vector(
-        this.left.position.x, this.bottom.position.y,
-        this.left.position.x, this.top.position.y,
-      ),
-      // Right
-      new Vector(
-        this.right.position.x, this.bottom.position.y,
-        this.right.position.x, this.top.position.y,
-      )
-    ];
+  // Pick a random point on a random vertice of a node
+  get randomVerticePoint () {
+    const vertice  = Math.random()*4;
+    const distance = Math.random();
+    const x = this.min_x;
+    const y = this.min_x;
+    const w = this.shape.width;
+    const h = this.shape.height;
+
+    if ( vertice < 1 ) {
+      // top
+      return new Vector(x+distance*w, y+h);
+    } else if ( vertice < 1 ) {
+      // bottom
+      return new Vector(x+distance*w, y);
+    } else if ( vertice < 1 ) {
+      // left
+      return new Vector(x, y+distance*h);
+    } else {
+      // right
+      return new Vector(x+w, x+distance*h);
+    }
   }
-  */
 
   // Run one animation frame
   step (timestep = 1) {
@@ -192,8 +187,6 @@ class Node {
     }
     return energy;
   }
-
-
 }
 
 // Node at random position

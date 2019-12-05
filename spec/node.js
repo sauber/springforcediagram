@@ -44,6 +44,17 @@ describe("Node", function () {
     expect(node.max_y).toBe(1);
   });
 
+  it("should have a random point on a vertice", function () {
+    const node = new Node(undefined, 0, 0, 4, 4);
+    const point = node.randomVerticePoint;
+    expect(
+      point.x == -2 ||
+      point.x ==  2 ||
+      point.y == -2 ||
+      point.y ==  2
+    ).toBeTrue();
+  });
+
   // Apply force to a boundary edge
   it("should accept pressure", function () {
     // Setup

@@ -6,6 +6,9 @@ const Rectangle = require("./rectangle");
 
 class Connector {
   constructor (node0, node1) { 
+    if ( ! node0 || ! node1 )
+      throw("Two nodes required for connector");
+
     this.node0 = node0;
     this.node1 = node1;
   }
@@ -97,6 +100,9 @@ class Connector {
   get isOverlap () {
     const r1 = this.node0;
     const r2 = this.node1;
+ 
+    //if ( ! r1 || ! r2 )
+    //  console.log(r1, r2);
 
     return (
       r1.min_x < r2.max_x &&
@@ -105,6 +111,28 @@ class Connector {
       r2.min_y < r1.max_y
     );
   }
+
+  // Pick a random point on a random vertice of a node
+  /*
+  randomVerticePoint ( node ) {
+    const vertice  = Math.random()*4;
+    const distance = Math.random();
+
+    if ( vertice < 1 ) {
+      // top
+      return new Vector(node.min_x+distance*node.shape.width, node.max_y);
+    } else if ( vertice < 1 ) {
+      // bottom
+      return new Vector(node.min_x+distance*node.shape.width, node.min_y);
+    } else if ( vertice < 1 ) {
+      // left
+      return new Vector(node.min_x, node.min_y+distance*node.shape.height);
+    } else {
+      // right
+      return new Vector(node.max_x, node.min_y+distance*node.shape.height);
+    }
+  }
+  */
 
   // The line connecting intersections
   get intersections () {
@@ -127,31 +155,51 @@ class Connector {
     );
     */
 
+    const r1 = this.node0;
+    const r2 = this.node1;
+
+    // Apply jitter if positions are equal
+    const jitter =
+      r1.position.equals(r2.position)
+      ? function () { return Math.random()*0.2-1 }
+      : function () { return 0 };
+
+    const upon = r1.position.equals(r2.position);
+    //console.log(upon, r1.shape.area, r2.shape.area, r1.position, r2.position);
+
     var node0_intersection;
-    if ( this.node0.area == 0 ) {
-      node0_intersection = this.node0.position;
+    if ( r1.shape.area == 0 ) {
+      node0_intersection = r1.position;
+    } else if ( upon ) {
+      node0_intersection = r1.randomVerticePoint;
+    } else if ( this.isOverlap ) {
+      node0_intersection = this.projectedBack( r1, r2)
     } else {
       node0_intersection = this.LSegRec_IntersPoint_v02(
-        this.node0.position,
-        this.node1.position,
-        this.node0.min_x,
-        this.node0.min_y,
-        this.node0.max_x,
-        this.node0.max_y,
+        r1.position,
+        r2.position,
+        r1.min_x,
+        r1.min_y,
+        r1.max_x,
+        r1.max_y,
       );
     }
 
     var node1_intersection;
-    if ( this.node1.area == 0 ) {
-      node1_intersection = this.node1.position;
+    if ( r2.shape.area == 0 ) {
+      node1_intersection = r2.position;
+    } else if ( upon ) {
+      node1_intersection = r2.randomVerticePoint;
+    } else if ( this.isOverlap ) {
+      node1_intersection = this.projectedBack( r2, r1)
     } else {
       node1_intersection = this.LSegRec_IntersPoint_v02(
-        this.node1.position,
-        this.node0.position,
-        this.node1.min_x,
-        this.node1.min_y,
-        this.node1.max_x,
-        this.node1.max_y,
+        r2.position,
+        r1.position,
+        r2.min_x,
+        r2.min_y,
+        r2.max_x,
+        r2.max_y,
       );
     }
 
@@ -180,16 +228,16 @@ class Connector {
   }
 
   projectedBack ( r1, r2 ) {
-    const ax = r1.position.x;
-    const ay = r1.position.y;
-    const bx = r2.position.x;
-    const by = r2.position.y;
-    //const r1 = this.node0;
-    //const r2 = this.node1;
+    // Apply jitter if positions are equal
+    const jitter =
+      r1.position.equals(r2.position)
+      ? function () { return Math.random()*0.2-1 }
+      : function () { return 0 };
 
-    if ( r1.position.equals(r2.position) ) {
-      throw("Node centers are on top of each other");
-    }
+    const ax = r1.position.x + jitter();
+    const ay = r1.position.y + jitter();
+    const bx = r2.position.x + jitter();
+    const by = r2.position.y + jitter();
 
     // Try above
     if ( by > ay ) {
@@ -242,6 +290,8 @@ class Connector {
         return new Vector(r1.max_x, fy);
       }
     }
+
+    throw("Gotta have an edge");
 
   }
 
