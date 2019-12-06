@@ -7,9 +7,9 @@ class Vector {
     this.y = y;
   }
 
-  random () {
-    return new Vector(10.0 * (Math.random() - 0.5), 10.0 * (Math.random() - 0.5));
-  };
+  //random () {
+  //  return new Vector(10.0 * (Math.random() - 0.5), 10.0 * (Math.random() - 0.5));
+  //};
 
   add (v2) {
     return new Vector(this.x + v2.x, this.y + v2.y);

@@ -5,15 +5,20 @@
 class Physics {
 }
 
-// Point physical thresholds
+// Pressure properties
 Physics.Pressure = {
   minimalMass: 0.3
 };
 
-// Node physical thresholds
+// Node properties
 Physics.Node = {
   friction: 0.1,
   maxSpeed: 20,
 };
 
+// Connector properties
+Physics.Spring = {
+  length: 3,
+  stiffness: 1,
+};
 module.exports = Physics;

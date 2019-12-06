@@ -3,6 +3,7 @@
 const Vector    = require("./vector");
 const Line      = require("./line");
 const Rectangle = require("./rectangle");
+const Physics   = require("./physics");
 
 class Connector {
   constructor (node0, node1) { 
@@ -248,9 +249,39 @@ class Connector {
         return new Vector(r1.max_x, fy);
       }
     }
-
     throw("Gotta have an edge");
+  }
 
+  // Apply pressure to nodes based on connector length
+  step () {
+    // Apply pressure to each node to reach ideal distance
+    const intersection = this.intersections; // Line between edges
+    const overlap = this.overlap ? 1 : -1; // Negative distance
+    const currentLength = overlap * intersection.distance.magnitude;
+    const restLength = Physics.Spring.length; // Ideal length
+    // When current length is less than ideal,
+    // the spring is too short, and generate positive pressure.
+    const tension = (restLength - currentLength) * Physics.Spring.stiffness; 
+    // Half tension is applied to each node
+    const b_force = new Vector(
+      intersection.b.x - intersection.a.x,
+      intersection.b.y - intersection.a.y,
+    ).normalise().multiply(tension).multiply(0.5);
+    const a_force = b_force.multiply(-1);
+    this.node0.applyForce(a_force);
+    this.node1.applyForce(b_force);
+    /*
+    console.log("vars", {
+     'intersect': intersection,
+     'overlap': overlap,
+     'currentdistance': currentLength,
+     'restdistance': restLength,
+     'tension': tension,
+     'a_force': a_force,
+     'b_force': b_force,
+    });
+    console.log("connector", this);
+    */
   }
 
 }

@@ -100,6 +100,20 @@ class Node {
     }
   }
 
+  // Apply pressure to a node translates into applying
+  // pressure to vertice points.
+  applyForce ( vector ) {
+    if ( vector.x > 0 )
+      this.left.applyForce(   new Vector(vector.x, 0) );
+    else
+      this.right.applyForce(  new Vector(vector.x, 0) );
+
+    if ( vector.y > 0 )
+      this.bottom.applyForce( new Vector(0, vector.y) );
+    else
+      this.top.applyForce(    new Vector(0, vector.y) );
+  }
+
   // Run one animation frame
   step (timestep = 1) {
     /*
@@ -153,15 +167,21 @@ class Node {
     const friction = Physics.Node.friction;
     const inertia = (1-friction) ** timestep;
     // Absorb acceleraion into velocity
+    // XXX: Move to pressure class
     for (const point of this.points) {
-      // XXX: Edge and center friction may be different
-      point.velocity = point.velocity.add(point.acceleration.multiply(timestep)).multiply(inertia);
-      //console.log(point.velocity);
-      if ( point.velocity.magnitude > Physics.Node.maxSpeed ) {
-        point.velocity = point.velocity.normalise().multiply(Physics.Node.maxSpeed);
+      if ( point.acceleration ) {
+        // XXX: Edge and center friction may be different
+        console.log("old velocity:", point.velocity);
+        console.log("old acceleration:", point.acceleration);
+        point.velocity = point.velocity.add(point.acceleration.multiply(timestep)).multiply(inertia);
+        console.log("new velocity:", point.velocity);
+        //console.log(point.velocity);
+        if ( point.velocity.magnitude > Physics.Node.maxSpeed ) {
+          point.velocity = point.velocity.normalise().multiply(Physics.Node.maxSpeed);
+        }
+        //console.log(point.velocity);
+        point.acceleration = new Vector(0,0);
       }
-      //console.log(point.velocity);
-      point.acceleration = new Vector(0,0);
     }
   }
 

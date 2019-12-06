@@ -218,4 +218,47 @@ describe("Connector", function () {
     expect(ee.b.y).toBeCloseTo(2.80, 2);
     expect(conn.isOverlap).not.toBeTrue();
   });
+
+  it("should apply force to two nodes", function () {
+    const a = new Node('a');
+    const b = new Node('b');
+    const c = new Connector(a, b);
+    c.step();
+
+    console.log("a", {
+      center: a.center.acceleration,
+    });
+
+    console.log("b", {
+      center: b.center.acceleration,
+    });
+
+    a.step();
+    b.step();
+
+    console.log("a", {
+      center: a.center.velocity,
+      top:    a.top.velocity,
+      bottom: a.bottom.velocity,
+      left:   a.left.velocity,
+      right:  a.right.velocity,
+    });
+
+    console.log("b", {
+      center: b.center.velocity,
+      top:    b.top.velocity,
+      bottom: b.bottom.velocity,
+      left:   b.left.velocity,
+      right:  b.right.velocity,
+    });
+
+    //console.log("connector", c);
+    //console.log("connector", c.node0.left);
+
+    // Nodes move in opposite direction
+    console.log("node a position", a.position);
+    console.log("node b position", b.position);
+    expect(a.position.x).toBe(-b.position.x);
+    expect(a.position.y).toBe(-b.position.y);
+  });
 });

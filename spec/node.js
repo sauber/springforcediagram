@@ -60,9 +60,9 @@ describe("Node", function () {
     // Setup
     const node = new Node("a cat in the hat");
 
-    // Action
+    // Action - force on left vertice
     const force = 1;
-    node.left.applyForce(new Vector(force,0));
+    node.applyForce(new Vector(force,0));
 
     // Measure
     const acceleration = force / node.left.mass;
@@ -71,13 +71,12 @@ describe("Node", function () {
     expect(node.left.acceleration.y).toBe(0);
   });
 
-  /*
   it("should update velocity and position from pressure", function () {
     const node = new Node("a cat in the hat");
 
     // Set acceleration
     const force = 50;
-    node.left.applyForce(new Vector(force,0));
+    node.applyForce(new Vector(force,0));
     const acceleration = force / node.left.mass;
 
     // Set velocity
@@ -115,6 +114,16 @@ describe("Node", function () {
     // It takes 14 steps to slow down enough for kinetic energy to be less than 0.1
     expect(step_count).toBe(14);
   });
-  */
+
+  it("should accept pressure from any angle", function () {
+    const node = new Node;
+    const force = Vector.random();
+    node.applyForce(force);
+    node.step(1);
+    //console.log(force,node);
+    //console.log(force,node);
+    expect(node.position.x).not.toBe(0);
+    expect(node.position.y).not.toBe(0);
+  });
 
 });
