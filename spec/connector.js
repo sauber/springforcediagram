@@ -119,6 +119,8 @@ describe("Connector", function () {
       expect(i).toBeDefined();
       expect(i.a.x).toBe(test[2]);
       expect(i.a.y).toBe(test[3]);
+      expect(i.b.x).toBe(test[4]);
+      expect(i.b.y).toBe(test[5]);
       expect(c.isOverlap).toBeTrue();
     }
   });
@@ -189,6 +191,7 @@ describe("Connector", function () {
     var conn = new Connector(nodea, nodeb);
     var ee = conn.intersections;
     expect(ee.a).toEqual(ee.b);
+    expect(ee.b).toEqual(ee.a);
     expect(conn.isOverlap).not.toBeTrue();
     // XXX magnitude is zero
   });
@@ -215,5 +218,4 @@ describe("Connector", function () {
     expect(ee.b.y).toBeCloseTo(2.80, 2);
     expect(conn.isOverlap).not.toBeTrue();
   });
-  
 });

@@ -112,49 +112,8 @@ class Connector {
     );
   }
 
-  // Pick a random point on a random vertice of a node
-  /*
-  randomVerticePoint ( node ) {
-    const vertice  = Math.random()*4;
-    const distance = Math.random();
-
-    if ( vertice < 1 ) {
-      // top
-      return new Vector(node.min_x+distance*node.shape.width, node.max_y);
-    } else if ( vertice < 1 ) {
-      // bottom
-      return new Vector(node.min_x+distance*node.shape.width, node.min_y);
-    } else if ( vertice < 1 ) {
-      // left
-      return new Vector(node.min_x, node.min_y+distance*node.shape.height);
-    } else {
-      // right
-      return new Vector(node.max_x, node.min_y+distance*node.shape.height);
-    }
-  }
-  */
-
   // The line connecting intersections
   get intersections () {
-    /*
-    console.log(
-        this.node0.position,
-        this.node1.position,
-        this.node0.min_x,
-        this.node0.min_y,
-        this.node0.max_x,
-        this.node0.max_y,
-    );
-    console.log(
-        this.node0.position,
-        this.node1.position,
-        this.node1.min_x,
-        this.node1.min_y,
-        this.node1.max_x,
-        this.node1.max_y,
-    );
-    */
-
     const r1 = this.node0;
     const r2 = this.node1;
 
@@ -165,7 +124,6 @@ class Connector {
       : function () { return 0 };
 
     const upon = r1.position.equals(r2.position);
-    //console.log(upon, r1.shape.area, r2.shape.area, r1.position, r2.position);
 
     var node0_intersection;
     if ( r1.shape.area == 0 ) {
