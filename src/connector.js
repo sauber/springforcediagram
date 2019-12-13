@@ -19,6 +19,7 @@ class Connector {
     return new Line(this.node1.position, this.node0.position);
   }
 
+  /*
   LSegsIntersectionPoint (ps1, pe1, ps2, pe2) {
     // Get A,B of first line - points : ps1 to pe1
     var A1 = pe1.y-ps1.y;
@@ -29,7 +30,7 @@ class Connector {
 
     // Get delta and check if the lines are parallel
     var delta = A1*B2 - A2*B1;
-    //console.log(delta, ps1, pe2,  ps2, pe2);
+    console.log("delta ps1 pe1 ps2 pe2", delta, ps1, pe2,  ps2, pe2);
     if(delta == 0) return null;
 
     // Get C of first and second lines
@@ -43,7 +44,7 @@ class Connector {
 
   LSegRec_IntersPoint_v02(p1, p2, min_x, min_y, max_x, max_y) {
     var intersection;
-    //console.log(p1, p2, min_x, min_y, max_x, max_y);
+    console.log("parameters:", p1, p2, min_x, min_y, max_x, max_y);
 
     if (p2.x <= min_x) //If the second point of the segment is at left/bottom-left/top-left of the AABB
     {
@@ -52,16 +53,14 @@ class Connector {
       {
         intersection = this.LSegsIntersectionPoint(p1, p2, new Vector(min_x, min_y), new Vector(max_x, min_y));
         if (intersection == null) intersection = this.LSegsIntersectionPoint(p1, p2, new Vector(min_x, min_y), new Vector(min_x, max_y));
-        //console.log("Bottom left");
-        //console.log(intersection);
+        console.log("Bottom left intersection", intersection);
         return intersection;
       }
       else //if p2.y > max_y, i.e. if it is at the top-left
       {
         intersection = this.LSegsIntersectionPoint(p1, p2, new Vector(min_x, max_y), new Vector(max_x, max_y));
         if (intersection == null) intersection = this.LSegsIntersectionPoint(p1, p2, new Vector(min_x, min_y), new Vector(min_x, max_y));
-        //console.log("Top left");
-        //console.log(intersection);
+        console.log("Top left intersection", intersection);
         return intersection;
       }
     }
@@ -73,44 +72,27 @@ class Connector {
       {
         intersection = this.LSegsIntersectionPoint(p1, p2, new Vector(min_x, min_y), new Vector(max_x, min_y));
         if (intersection == null) intersection = this.LSegsIntersectionPoint(p1, p2, new Vector(max_x, min_y), new Vector(max_x, max_y));
-        //console.log("Bottom right");
-        //console.log(intersection);
+        console.log("Bottom right intersection", intersection);
         return intersection;
       }
       else //if p2.y > max_y, i.e. if it is at the top-left
       {
         intersection = this.LSegsIntersectionPoint(p1, p2, new Vector(min_x, max_y), new Vector(max_x, max_y));
         if (intersection == null) intersection = this.LSegsIntersectionPoint(p1, p2, new Vector(max_x, min_y), new Vector(max_x, max_y));
-        //console.log("Top right");
-        //console.log(intersection);
+        console.log("Top right intersection", intersection);
         return intersection;
       }
     }
 
     else //If the second point of the segment is at top/bottom of the AABB
     {
-      //console.log("Somewhere else");
+      console.log("Somewhere else");
       if (p2.y <= min_y) return this.LSegsIntersectionPoint(p1, p2, new Vector(min_x, min_y), new Vector(max_x, min_y)); //If it is at the bottom
       if (p2.y >= max_y) return this.LSegsIntersectionPoint(p1, p2, new Vector(min_x, max_y), new Vector(max_x, max_y)); //If it is at the top
     }
 
-    //console.log("Nowhere");
+    console.log("Nowhere");
     return null;
-  }
-
-  get isOverlap () {
-    const r1 = this.node0;
-    const r2 = this.node1;
- 
-    //if ( ! r1 || ! r2 )
-    //  console.log(r1, r2);
-
-    return (
-      r1.min_x < r2.max_x &&
-      r2.min_x < r1.max_x &&
-      r1.min_y < r2.max_y &&
-      r2.min_y < r1.max_y
-    );
   }
 
   // The line connecting intersections
@@ -128,12 +110,17 @@ class Connector {
 
     var node0_intersection;
     if ( r1.shape.area == 0 ) {
+      console.log("n0 zero area");
       node0_intersection = r1.position;
     } else if ( upon ) {
+      console.log("n0 same position");
       node0_intersection = r1.randomVerticePoint;
     } else if ( this.isOverlap ) {
+      console.log("n0 part overlap");
       node0_intersection = this.projectedBack( r1, r2)
     } else {
+      console.log("n0 vertice point");
+      console.log("min/max:", r1.min_x, r1.min_y, r1.max_x, r1.max_y);
       node0_intersection = this.LSegRec_IntersPoint_v02(
         r1.position,
         r2.position,
@@ -146,12 +133,17 @@ class Connector {
 
     var node1_intersection;
     if ( r2.shape.area == 0 ) {
+      console.log("n1 zero area");
       node1_intersection = r2.position;
     } else if ( upon ) {
+      console.log("n1 same position");
       node1_intersection = r2.randomVerticePoint;
     } else if ( this.isOverlap ) {
+      console.log("n1 part overlap");
       node1_intersection = this.projectedBack( r2, r1)
     } else {
+      console.log("n1 vertice point");
+      console.log("min/max:", r2.min_x, r2.min_y, r2.max_x, r2.max_y);
       node1_intersection = this.LSegRec_IntersPoint_v02(
         r2.position,
         r1.position,
@@ -164,12 +156,112 @@ class Connector {
 
     return new Line(node0_intersection, node1_intersection);
   }
+  */
+
+  get isOverlap () {
+    const r1 = this.node0;
+    const r2 = this.node1;
+ 
+    //if ( ! r1 || ! r2 )
+    //  console.log(r1, r2);
+
+    return (
+      r1.min_x < r2.max_x &&
+      r2.min_x < r1.max_x &&
+      r1.min_y < r2.max_y &&
+      r2.min_y < r1.max_y
+    );
+  }
+
+  get intersections () {
+    const r1 = this.node0;
+    const r2 = this.node1;
+
+    // Are centers on top of each other
+    const upon = r1.position.equals(r2.position);
+
+    const p1 = (r1.x, r1.y, r2.x, r2.y); // From middle of r1 to middle of r2
+    const p2 = (r2.x, r2.y, r1.x, r1.y); // From middle of r2 to middle of r1
+
+    var r1_is;
+    if ( r1.shape.area == 0 ) {
+      console.log("r1 zero area");
+      r1_is = r1.position;
+    } else if ( upon ) {
+      console.log("r1 same position");
+      r1_is = r1.randomVerticePoint;
+    } else {
+      console.log("r1 distance");
+      r1_is =
+        this.horizontalCross(p1, r1.max_y, r1.min_x, r2.max_x) || // top
+        this.horizontalCross(p1, r1.min_y, r1.min_x, r2.max_x) || // bottom
+        this.verticalCross(p1, r1.min_x, r1.min_y, r2.max_y) || // left
+        this.verticalCross(p1, r1.max_x, r1.min_y, r2.max_y); // right
+    }
+
+    var r2_is;
+    if ( r2.shape.area == 0 ) {
+      console.log("r2 zero area");
+      r2_is = r2.position;
+    } else if ( upon ) {
+      console.log("r2 same position");
+      r2_is = r2.randomVerticePoint;
+    } else {
+      console.log("r2 distance");
+      r2_is =
+        this.horizontalCross(p2, r2.max_y, r2.min_x, r1.max_x) || // top
+        this.horizontalCross(p2, r2.min_y, r2.min_x, r1.max_x) || // bottom
+        this.verticalCross(p2, r2.min_x, r2.min_y, r1.max_y) || // left
+        this.verticalCross(p2, r2.max_x, r2.min_y, r1.max_y); // right
+    }
+
+    return new Line(r1_is, r2_is);
+    
+  }
+
+  // A line is crossing a horizontal line
+  // (or vertical if swapping x<->y)
+  //
+  //                r2
+  //               /
+  // (x_min,y) o--*--o (x_max,y)
+  //             /
+  //            r1
+  //
+  horizontalCross ( r1x, r1y, r2x, r2y, ly, x_min, x_max) {
+    const  x = r2x - r1x; // x from r1 to r2
+    const  y = r2y - r1y; // y from r1 to r2
+    const dy =   ly - r1y; // y from r1 to line
+    const dx = x * (dy/y);  // x from r1 to cross
+    const cx = r1x + dx;   // x of point
+    const cy = ly;          // y of point
+    if ( cx < x_min || cx > x_max ) return null; // Not crossing
+    if ( r2x > r1x && cx < r1x ) return null; // Crossing left of r1
+    if ( r1x > r2x && cx > r1x ) return null; // Crossing right of r1
+    return new Vector(cx, cy);                   // Crossing between r1/r2 or beyond r2
+  }
+
+  // A line is crossing a vertical line
+  //
+  // (x,y_max)
+  //  r1 o
+  //    \|
+  //     *
+  //     |\
+  //     o r2
+  // (x,y_min)
+  //
+  verticalCross ( r1x, r1y, r2x, r2y, lx, y_min, y_max) {
+    return horizontalCross(r1y, r1x, r2y, r2x, lx, y_min, y_max);
+  }
+
 
 
   /*
     When both center points are inside rectangles, then 
     line between centers need to be projected until reaching
     a vertice. The magnitude is negative.
+    XXX: This may not be the case for both rectangles!
 
       5+-------+
        |+-o-----+
@@ -186,6 +278,11 @@ class Connector {
     );
   }
 
+  // Both point of a line are located inside of a rectangle.
+  // When extending from r1 through r2, which one of the vertices
+  // will the line cut through,
+  // and at what point on the vertice?
+  //
   projectedBack ( r1, r2 ) {
     // Apply jitter if positions are equal
     const jitter =

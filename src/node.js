@@ -88,10 +88,10 @@ class Node {
     if ( vertice < 1 ) {
       // top
       return new Vector(x+distance*w, y+h);
-    } else if ( vertice < 1 ) {
+    } else if ( vertice < 2 ) {
       // bottom
       return new Vector(x+distance*w, y);
-    } else if ( vertice < 1 ) {
+    } else if ( vertice < 3 ) {
       // left
       return new Vector(x, y+distance*h);
     } else {
@@ -171,10 +171,10 @@ class Node {
     for (const point of this.points) {
       if ( point.acceleration ) {
         // XXX: Edge and center friction may be different
-        console.log("old velocity:", point.velocity);
-        console.log("old acceleration:", point.acceleration);
+        //console.log("old velocity:", point.velocity);
+        //console.log("old acceleration:", point.acceleration);
         point.velocity = point.velocity.add(point.acceleration.multiply(timestep)).multiply(inertia);
-        console.log("new velocity:", point.velocity);
+        //console.log("new velocity:", point.velocity);
         //console.log(point.velocity);
         if ( point.velocity.magnitude > Physics.Node.maxSpeed ) {
           point.velocity = point.velocity.normalise().multiply(Physics.Node.maxSpeed);

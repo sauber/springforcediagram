@@ -68,12 +68,16 @@ class Render {
     var sy = (y0 < y1) ? 1 : -1;
     var err = dx - dy;
 
+    //var safety = 25;
     while(true) {
+      //console.log(x0,y0,x1,y1,dx,dy,sx,sy,err,Math.abs(x0 - x1),Math.abs(y0 - y1));
+      //console.log(Math.abs(x0 - x1) < 1 && Math.abs(y0 - y1) < 1);
       this.plotChar(x0, y0, 'o');
-      if (Math.abs(x0 - x1) <= 0.5 && Math.abs(y0 - y1) <= 0.5) break;
+      if (Math.abs(x0 - x1) < 1 && Math.abs(y0 - y1) < 1) break;
       var e2 = 2*err;
       if (e2 > -dy) { err -= dy; x0  += sx; }
       if (e2 < dx) { err += dx; y0  += sy; }
+      //if ( --safety <= 0 ) throw("runaway");
     }
   }
 
@@ -119,6 +123,35 @@ class Render {
       lines.unshift(line);
     }
     return lines;
+  }
+
+  // Plot nodes in a diagram
+  //
+  plotDiagram(diagram) {
+    // Render Nodes
+    for ( const node of diagram.nodes ) {
+      const nodetype = node.shape.constructor.name;
+      if ( nodetype == 'Text' ) {
+        this.plotText(
+          node.position.x,
+          node.position.y,
+          node.shape.lines,
+        );
+      } else {
+        this.plotRectangle(
+          node.position.x,
+          node.position.y,
+          node.shape.width,
+          node.shape.height,
+        );
+      }
+    }
+
+    // Render Edges
+    for ( const edge of diagram.edges ) {
+      const i = edge.intersections;
+      this.plotLine(i.a.x, i.a.y, i.b.x, i.b.y);
+    }
   }
 }
 

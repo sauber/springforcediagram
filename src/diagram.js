@@ -30,6 +30,7 @@ class Diagram {
   step (timestep = 1) {
     // Apply forces
     this.applyForces();
+
     // Animate nodes
     for ( let node of this.nodes ) {
       node.step(timestep)
@@ -37,15 +38,22 @@ class Diagram {
   }
 
   applyForces () {
-    this.attractToCenter();
+    // Node forces
+    for ( let node of this.nodes ) {
+      this.attractToCenter(node);
+    }
+
+    // Edge forces
+    for ( let edge of this.edges ) {
+      edge.step();
+    }
+ 
   }
 
-  attractToCenter () {
-    for ( let node of this.nodes ) {
-      node.center.applyForce(
-        node.position.normalise().multiply(-1)
-      );
-    }
+  attractToCenter ( node ) {
+    node.center.applyForce(
+      node.position.normalise().multiply(-1)
+    );
   }
 
 }

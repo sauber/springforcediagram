@@ -1,4 +1,5 @@
-const Render = require("../src/render-ascii");
+const Render  = require("../src/render-ascii");
+const Diagram = require("../src/diagram");
 
 describe("Render", function () {
   it("should instantiate", function () {
@@ -26,7 +27,11 @@ describe("Render", function () {
   it("should plot boxes", function () {
     const r = new Render;
     r.plotRectangle(0, 0, 3, 2);
-    expect(r.lines).toEqual(['+--+', '|  |', '+--+' ]);
+    expect(r.lines).toEqual([
+      '+--+',
+      '|  |',
+      '+--+',
+    ]);
   });
 
   it("should plot lines", function () {
@@ -77,5 +82,29 @@ describe("Render", function () {
      '|x|',
      "`-'",
     ]);
+  });
+
+  it("may render a whole graph", function () {
+    const dia = new Diagram;
+    const a = dia.addNode("a");
+    const b = dia.addNode("b");
+    const c = dia.addNode("c");
+    const d = dia.addNode();
+    const e = dia.addEdge(a, b);
+    const f = dia.addEdge(b, c);
+    const g = dia.addEdge(c, a);
+
+    var r;
+    for ( var i = 0; i<4; i++ ) {
+      dia.step();
+      r = new Render;
+      r.plotDiagram(dia);
+      console.log(r.lines);
+      console.log(e.node0.center.velocity);
+    }
+
+    console.log(a.position);
+    console.log(b.position);
+    console.log(e.intersections);
   });
 });

@@ -3,6 +3,7 @@ const Node      = require("../src/node");
 const Vector    = require("../src/vector");
 
 describe("Connector", function () {
+  /*
   it("should not allow empty instantiation", function () {
     var conn;
     try { conn = new Connector } catch {};
@@ -23,14 +24,13 @@ describe("Connector", function () {
   });
 
   it("should have distance between nearest edges of two nodes at identical position", function () {
-    /*
-      Node centers exactly on top of each other
-      +-----+
-      |     |
-      |  *  |
-      |     |
-      +-----+
-    */
+    // Node centers exactly on top of each other
+    // +-----+
+    // |     |
+    // |  *  |
+    // |     |
+    // +-----+
+
     const a = new Node;
     const b = new Node;
     const c = new Connector(a, b);
@@ -65,26 +65,22 @@ describe("Connector", function () {
   });
 
   it("should have distance when both centers are within edges of both nodes", function () {
-    /*
-      Both centers are within edges of both nodes
+    //  Both centers are within edges of both nodes
 
-      5+-------+
-       | +-------+
-      3| | a   : |
-      2| |   b : |
-       +-|~~~~~' |
-      0  +-------+
-       0   2 3   5
-    */
+    //  5+-------+
+    //   | +-------+
+    //  3| | a   : |
+    //  2| |   b : |
+    //   +-|~~~~~' |
+    //  0  +-------+
+    //   0   2 3   5
 
-    /*
-      Test cases at the following positions
-      b c d * *   a = (2  ,3)
-      *       *   b = (1  ,4) => i = (4,1)->(-1,6)
-      *   a   *   c = (1.5,4) => i = (3,1)->( 0,6)
-      *       *   d = (2  ,4)
-      * * * * *   ...
-    */
+    //  Test cases at the following positions
+    //  b c d * *   a = (2  ,3)
+    //  *       *   b = (1  ,4) => i = (4,1)->(-1,6)
+    //  *   a   *   c = (1.5,4) => i = (3,1)->( 0,6)
+    //  *       *   d = (2  ,4)
+    //  * * * * *   ...
 
     const cases = [
       // bx, by, aix, aiy, bix, biy
@@ -127,15 +123,14 @@ describe("Connector", function () {
 
   it("should have distance when centers are on edges", function () {
     // Centers are located exactly on edges
-    /*
-      5+-------+
-      4|   +-------+
-      3|   a   :   |
-      2|   |   b   |
-      1+---|~~~'   |
-      0    +-------+
-       0   2   4   6
-    */
+    // 5+-------+
+    // 4|   +-------+
+    // 3|   a   :   |
+    // 2|   |   b   |
+    // 1+---|~~~'   |
+    // 0    +-------+
+    //  0   2   4   6
+
     var nodea = new Node(undefined, 2, 3, 4, 4);
     var nodeb = new Node(undefined, 4, 2, 4, 4);
     var conn = new Connector(nodea, nodeb);
@@ -149,17 +144,16 @@ describe("Connector", function () {
   });
 
   it("should have distance when nodes overlap", function () {
-    /*
-      Both centers are outside edges and edges overlap
-      6+-------+
-       |       |
-      4|   a +-------+
-       |     | :     |
-      2+-----|~' b   |
-             |       |
-      0      +-------+
-       0   2 3 4 5    7
-    */
+    // Both centers are outside edges and edges overlap
+    // 6+-------+
+    //  |       |
+    // 4|   a +-------+
+    //  |     | :     |
+    // 2+-----|~' b   |
+    //        |       |
+    // 0      +-------+
+    //  0   2 3 4 5    7
+
     var nodea = new Node(undefined, 2, 4, 4, 4);
     var nodeb = new Node(undefined, 5, 2, 4, 4);
     var conn = new Connector(nodea, nodeb);
@@ -175,17 +169,16 @@ describe("Connector", function () {
   });
 
   it("should have distance when edges overlap", function () {
-    /*
-      When edges touch, intersection points overlap
-      6+-------+
-       |       |
-      4|   a   +-------+
-       |       *       |
-      2+-------|   b   |
-      1        |       |
-      0        +-------+
-       0   2   4   6   8
-    */
+    // When edges touch, intersection points overlap
+    // 6+-------+
+    //  |       |
+    // 4|   a   +-------+
+    //  |       *       |
+    // 2+-------|   b   |
+    // 1        |       |
+    // 0        +-------+
+    //  0   2   4   6   8
+
     var nodea = new Node(undefined, 2, 4, 4, 4);
     var nodeb = new Node(undefined, 6, 2, 4, 4);
     var conn = new Connector(nodea, nodeb);
@@ -197,17 +190,16 @@ describe("Connector", function () {
   });
 
   it("should have distance when nodes have distance", function () {
-    /*
-      No overlap of edges
-      6+-------+
-       |       |
-      4|   a   | +-------+
-       |       | |       |
-      2+-------+ |   b   |
-      1          |       |
-      0          +-------+
-       0   2   4 5   7   9
-    */
+    // No overlap of edges
+    // 6+-------+
+    //  |       |
+    // 4|   a   | +-------+
+    //  |       | |       |
+    // 2+-------+ |   b   |
+    // 1          |       |
+    // 0          +-------+
+    //  0   2   4 5   7   9
+ 
     var nodea = new Node(undefined, 2, 4, 4, 4);
     var nodeb = new Node(undefined, 7, 2, 4, 4);
     var conn = new Connector(nodea, nodeb);
@@ -218,7 +210,23 @@ describe("Connector", function () {
     expect(ee.b.y).toBeCloseTo(2.80, 2);
     expect(conn.isOverlap).not.toBeTrue();
   });
+  */
 
+  /*
+  it("should have distance when far apart", function () {
+    const a = new Node('a', -16.790159949671647, 5.571926205174964);
+    const b = new Node('b', -27.141822812006268, 7.106986312982537);
+    const c = new Connector(a, b);
+    const i = c.intersections;
+    console.log(a.position);
+    console.log(b.position);
+    console.log(i);
+    console.log(a.shape.width, a.shape.height);
+    expect(i.a.x).toBe(a.position.x);
+  });
+  /*
+
+  /*
   it("should apply force to two nodes", function () {
     const a = new Node('a');
     const b = new Node('b');
@@ -260,5 +268,22 @@ describe("Connector", function () {
     console.log("node b position", b.position);
     expect(a.position.x).toBe(-b.position.x);
     expect(a.position.y).toBe(-b.position.y);
+  });
+    */
+
+  it("should apply force to two nodes", function () {
+    const a = new Node('a');
+    const b = new Node('b');
+    const c = new Connector(a, b);
+
+    const v = c.horizontalCross(
+       1,-1,
+      -1, 1,
+       3,
+      -10,
+       10,
+    );
+    console.log(v);
+    console.log(c.intersections);
   });
 });
