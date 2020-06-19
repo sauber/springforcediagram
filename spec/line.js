@@ -25,4 +25,22 @@ describe("Line", function () {
     );
     expect(line.middle).toEqual(new Vector(3,2));
   });
+
+  it("should have a slope", function () {
+    const line = new Line(
+      new Vector(1,1),
+      new Vector(5,3),
+    );
+    expect(line.m).toEqual(0.5);
+  });
+
+  it("should relate x<->y", function () {
+    const line = new Line(
+      new Vector(1,1),
+      new Vector(5,3),
+    );
+    expect(line.fy(3)).toEqual(2);
+    expect(line.fx(2)).toEqual(3);
+  });
+
 });

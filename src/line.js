@@ -23,6 +23,21 @@ class Line {
       (this.a.y + this.b.y)/2,
     );
   }
+
+  // Slope / gradient
+  get m () {
+    return (this.b.y-this.a.y)/(this.b.x-this.a.x);
+  }
+
+  // At a given x position, what is y
+  fy ( x ) {
+    return this.a.y+(x-this.a.x)*this.m;
+  }
+
+  // At a given y position, what is x
+  fx ( y ) {
+    return this.a.x+(y-this.a.y)/this.m;
+  }
 }
 
 module.exports = Line;
