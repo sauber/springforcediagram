@@ -1,19 +1,13 @@
-//const SpringType = require("../src/springtype");
-//const Pressure   = require("../src/pressure");
 const Line   = require("../src/line");
 const Point  = require("../src/vector");
 const Spring = require("../src/spring");
 
 describe("Spring", function () {
-  //const length = 1;
-  //const stiffness = 0.5;
-  //const point1 = new Pressure(0, 0);
-  //const point2 = new Pressure(1, 0);
-  //const type = new SpringType(length, stiffness);
-  //const line = new Line(
-    //new Point(0,0),
-    //new Point(2,0),
-  //);
+
+  var line;
+  beforeEach(function(){
+    line = new Line( new Point(0,0), new Point(2,0) );
+  });
 
   it("should allow empty instantiation", function () {
     const s = new Spring();
@@ -22,12 +16,29 @@ describe("Spring", function () {
   });
 
   it("should allow negative length", function () {
-    const line = new Line(
-      new Point(0,0),
-      new Point(2,0),
-    );
     const s = new Spring(line);
     s.positive = 0;
     expect(s.tension).toBe(3);
   });
+
+  it("should have more tension when shorter", function () {
+    const s = new Spring(line);
+    const t = new Spring(new Line(new Point(0,0), new Point(1,0)));
+    expect(t.tension).toBeGreaterThan(s.tension);
+  });
+
+  it("should have less tension when longer", function () {
+    const s = new Spring(line);
+    const t = new Spring(new Line(new Point(0,0), new Point(3,0)));
+    expect(t.tension).toBeLessThan(s.tension);
+  });
+
+  it("should have more tension when stiffer", function () {
+    const short = new Line(new Point(0,0), new Point(0.5,0))
+    const s = new Spring(short);
+    const t = new Spring(short);
+    t.stiffness = 2;
+    expect(t.tension).toBeGreaterThan(s.tension);
+  });
+
 });

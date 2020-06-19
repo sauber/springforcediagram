@@ -11,13 +11,11 @@ class Spring {
   }
 
   // When length is less than rest, then tension is high
-  // Otherwise low
+  // Otherwise lower tension
   get tension () {
-    //console.log(`Rest length ${this.length}`);
-    //console.log(`Line length ${this.line.length}`);
-    return this.stiffness * this.positive
+    return this.stiffness * ( this.positive
       ? this.length - this.line.length
-      : this.length + this.line.length;
+      : this.length + this.line.length );
   }
 }
 
