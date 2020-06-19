@@ -5,6 +5,7 @@ describe("Line", function () {
   it("should allow empty instantiation", function () {
     const line = new Line;
     expect(line).toBeDefined();
+    expect(line.length).toBe(0);
   });
 
   it("should have zero distance between two same points", function () {

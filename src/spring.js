@@ -1,18 +1,23 @@
+const Line = require('./line');
+
 "use strict";
 
 class Spring {
-  constructor ( point1, point2, type ) {
-    this.point1 = point1;  // position
-    this.point2 = point2;  // mass
-    this.type = type;      // Spring properties
+  constructor ( line = new Line, length=1, stiffness=1, positive=1 ) {
+    this.line = line; // Position a->b
+    this.length = length; // Spring length at rest
+    this.stiffness = stiffness; // How stiff a spring is
+    this.positive = positive; // 0 if spring is negative length
   }
 
-  length () {
-    return this.type.length;  // Spring length at rest
-  }
-
-  stiffness () {
-    return this.type.stiffness;  // How stiff spring is
+  // When length is less than rest, then tension is high
+  // Otherwise low
+  get tension () {
+    //console.log(`Rest length ${this.length}`);
+    //console.log(`Line length ${this.line.length}`);
+    return this.stiffness * this.positive
+      ? this.length - this.line.length
+      : this.length + this.line.length;
   }
 }
 

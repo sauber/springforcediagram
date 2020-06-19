@@ -2,10 +2,11 @@
 
 "use strict";
 
+const Point  = require("./vector");
 const Vector = require("./vector");
 
 class Line {
-  constructor (p1, p2) { 
+  constructor (p1 = new Point(0,0), p2 = new Point(0,0)) { 
     this.a = p1;
     this.b = p2;
   }
@@ -15,6 +16,10 @@ class Line {
       this.b.x - this.a.x,
       this.b.y - this.a.y,
     );
+  }
+
+  get length () {
+    return this.distance.magnitude;
   }
 
   get middle () {
