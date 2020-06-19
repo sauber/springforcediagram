@@ -235,6 +235,8 @@ class Connector {
     const dx = x * (dy/y);  // x from r1 to cross
     const cx = r1x + dx;   // x of point
     const cy = ly;          // y of point
+    if ( r1y > ly && r2y > ly ) return null; // Above
+    if ( r1y < ly && r2y < ly ) return null; // Below
     if ( cx < x_min || cx > x_max ) return null; // Not crossing
     if ( r2x > r1x && cx < r1x ) return null; // Crossing left of r1
     if ( r1x > r2x && cx > r1x ) return null; // Crossing right of r1

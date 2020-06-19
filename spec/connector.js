@@ -284,6 +284,6 @@ describe("Connector", function () {
        10,
     );
     console.log(v);
-    console.log(c.intersections);
+    //console.log(c.intersections);
   });
 });
