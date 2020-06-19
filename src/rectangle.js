@@ -4,12 +4,11 @@
 
 "use strict";
 
+// A resizable area without a position
 class Rectangle {
   constructor (width = 0, height = 0) {
-    //this.x      = x; // Center x
-    //this.y      = y; // Center y
-    this._width  = width;
-    this._height = height;
+    this.width  = width;
+    this.height = height;
   }
 
   // For rectangle box, it becomes wider or taller
@@ -21,8 +20,6 @@ class Rectangle {
   adjustSize (top, bottom, left, right) {
     this.width  += left + right;
     this.height += top  + bottom;
-    //this.x += (top  - bottom)/2;
-    //this.y += (left - right )/2;
   }
 
   get width () { return this._width }
@@ -40,17 +37,8 @@ class Rectangle {
   }
 
   get area () {
-    return this._width * this._height;
+    return this.width * this.height;
   }
-
-  /*
-  get min_x () { return this.x - this.width /2 }
-  get min_y () { return this.y - this.height/2 }
-  get max_x () { return this.x + this.width /2 }
-  get max_y () { return this.y + this.height/2 }
-  */
-
-  get area () { return this.width * this.height }
 }
 
 module.exports = Rectangle;
