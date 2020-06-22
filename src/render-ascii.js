@@ -68,16 +68,16 @@ class Render {
     var sy = (y0 < y1) ? 1 : -1;
     var err = dx - dy;
 
-    //var safety = 25;
+    var safety = 25;
     while(true) {
-      //console.log(x0,y0,x1,y1,dx,dy,sx,sy,err,Math.abs(x0 - x1),Math.abs(y0 - y1));
-      //console.log(Math.abs(x0 - x1) < 1 && Math.abs(y0 - y1) < 1);
+      console.log(x0,y0,x1,y1,dx,dy,sx,sy,err,Math.abs(x0 - x1),Math.abs(y0 - y1));
+      console.log(Math.abs(x0 - x1) < 1 && Math.abs(y0 - y1) < 1);
       this.plotChar(x0, y0, 'o');
       if (Math.abs(x0 - x1) < 1 && Math.abs(y0 - y1) < 1) break;
       var e2 = 2*err;
       if (e2 > -dy) { err -= dy; x0  += sx; }
       if (e2 < dx) { err += dx; y0  += sy; }
-      //if ( --safety <= 0 ) throw("runaway");
+      if ( --safety <= 0 ) throw("runaway");
     }
   }
 
@@ -129,6 +129,7 @@ class Render {
   //
   plotDiagram(diagram) {
     // Render Nodes
+    console.log('Render Nodes');
     for ( const node of diagram.nodes ) {
       const nodetype = node.shape.constructor.name;
       if ( nodetype == 'Text' ) {
@@ -148,10 +149,13 @@ class Render {
     }
 
     // Render Edges
+    //console.log('Render Edges');
     for ( const edge of diagram.edges ) {
       const i = edge.intersections;
-      this.plotLine(i.a.x, i.a.y, i.b.x, i.b.y);
+      // TODO
+      //this.plotLine(i.a.x, i.a.y, i.b.x, i.b.y);
     }
+    //console.log('Render Done');
   }
 }
 

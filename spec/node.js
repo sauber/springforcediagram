@@ -1,19 +1,26 @@
 const Node   = require("../src/node");
+const Point  = require("../src/vector");
 const Vector = require("../src/vector");
 const Physics = require("../src/physics");
+const Vertical = require("../src/vertical_line");
+const Horizontal = require("../src/horizontal_line");
 
 describe("Node", function () {
+  var zero;
+  beforeEach(function(){
+    zero = new Point(0,0);
+  });
+
   it("should allow empty instantiation", function () {
     const node = new Node;
 
     expect(node.shape.area).toBe(0);
     expect(node.children.length).toBe(0);
-    expect(node.position.x).toBe(0);
-    expect(node.position.y).toBe(0);
-    //expect(node.min_x).toBe(0);
-    //expect(node.min_y).toBe(0);
-    //expect(node.max_x).toBe(0);
-    //expect(node.max_y).toBe(0);
+    expect(node.position).toEqual(zero);
+    expect(node.min_x).toBe(0);
+    expect(node.min_y).toBe(0);
+    expect(node.max_x).toBe(0);
+    expect(node.max_y).toBe(0);
   });
 
   it("should allow adding child nodes", function () {
@@ -31,8 +38,7 @@ describe("Node", function () {
 
   it("may have an initial random position", function () {
     const node = new Node.random();
-    expect(node.position.x).not.toBe(0);
-    expect(node.position.y).not.toBe(0);
+    expect(node.position).not.toEqual(zero);
   });
 
   it("may have an initial size", function () {
@@ -42,6 +48,16 @@ describe("Node", function () {
     expect(node.min_y).toBe(-1);
     expect(node.max_x).toBe(2);
     expect(node.max_y).toBe(1);
+  });
+
+  it("should have 4 sides", function () {
+    const node = new Node;
+    const sides = node.sides;
+    expect(sides.length).toBe(4);
+    expect(sides[0]).toEqual(jasmine.any(Horizontal));
+    expect(sides[1]).toEqual(jasmine.any(Horizontal));
+    expect(sides[2]).toEqual(jasmine.any(Vertical));
+    expect(sides[3]).toEqual(jasmine.any(Vertical));
   });
 
   it("should have a random point on a vertice", function () {
@@ -122,8 +138,7 @@ describe("Node", function () {
     node.step(1);
     //console.log(force,node);
     //console.log(force,node);
-    expect(node.position.x).not.toBe(0);
-    expect(node.position.y).not.toBe(0);
+    expect(node.position).not.toEqual(zero);
   });
 
 });

@@ -1,9 +1,9 @@
 const Connector = require("../src/connector");
 const Node      = require("../src/node");
 const Vector    = require("../src/vector");
+const Line      = require("../src/line");
 
 describe("Connector", function () {
-  /*
   it("should not allow empty instantiation", function () {
     var conn;
     try { conn = new Connector } catch {};
@@ -14,13 +14,10 @@ describe("Connector", function () {
     const a = Node.random();
     const b = Node.random();
     const c = new Connector(a, b);
-    expect(c.centers.distance.magnitude).toBeGreaterThan(0);
+    expect(c.centers.length).toBeGreaterThan(0);
     // Edge to edge connector is same as centers
-    const i = c.intersections;
-    expect(i.a.x).toBe(a.position.x);
-    expect(i.a.y).toBe(a.position.y);
-    expect(i.b.x).toBe(b.position.x);
-    expect(i.b.y).toBe(b.position.y);
+    const s = c.spring;
+    expect(s.line).toEqual(c.centers);
   });
 
   it("should have distance between nearest edges of two nodes at identical position", function () {
@@ -37,11 +34,9 @@ describe("Connector", function () {
     expect(c.centers.distance.magnitude).toBe(0);
     // There is no overlap when size is 0
     expect(c.isOverlap).toBeFalse();
-    const i = c.intersections;
-    expect(i.a.x).toBe(0);
-    expect(i.a.y).toBe(0);
-    expect(i.b.x).toBe(0);
-    expect(i.b.y).toBe(0);
+    const s = c.spring;
+    const zeroline = Line.simple(0,0,0,0);
+    expect(s.line).toEqual(zeroline);
   });
 
   it("should have distance between edges when having an area and identical position", function () {
@@ -49,18 +44,19 @@ describe("Connector", function () {
     const b = new Node(undefined, 0, 0, 4, 4);
     const c = new Connector(a, b);
     expect(c.isOverlap).toBeTrue();
-    const i = c.intersections;
+    const s = c.spring;
+    const l = s.line;
     expect(
-      i.a.x == -2 ||
-      i.a.y == -2 ||
-      i.a.x ==  2 ||
-      i.a.y ==  2
+      l.a.x == -2 ||
+      l.a.y == -2 ||
+      l.a.x ==  2 ||
+      l.a.y ==  2
     ).toBeTrue();
     expect(
-      i.b.x == -2 ||
-      i.b.y == -2 ||
-      i.b.x ==  2 ||
-      i.b.y ==  2
+      l.b.x == -2 ||
+      l.b.y == -2 ||
+      l.b.x ==  2 ||
+      l.b.y ==  2
     ).toBeTrue();
   });
 
@@ -107,17 +103,21 @@ describe("Connector", function () {
 
     for ( let test of cases ) {
       const a = new Node(undefined, 2, 3, 4, 4);
+      //console.log(a.min_x, a.min_y, a.max_x, a.max_y);
       const b = new Node(undefined, test[0], test[1], 4, 4);
+      //console.log(b.min_x, b.min_y, b.max_x, b.max_y);
       const c = new Connector(a, b);
-      //const i = c.projectedIntersection;
-      const i = c.intersections;
-      //console.log( test, i );
+      const i = c.spring.line;
+      console.log( test, i );
       expect(i).toBeDefined();
-      expect(i.a.x).toBe(test[2]);
-      expect(i.a.y).toBe(test[3]);
-      expect(i.b.x).toBe(test[4]);
-      expect(i.b.y).toBe(test[5]);
+      const line = new Line.simple(test[2], test[3], test[4], test[5]);
+      //expect(i.a.x).toBe(test[2]);
+      //expect(i.a.y).toBe(test[3]);
+      //expect(i.b.x).toBe(test[4]);
+      //expect(i.b.y).toBe(test[5]);
+      expect(i).toEqual(line);
       expect(c.isOverlap).toBeTrue();
+      //throw(1);
     }
   });
 
@@ -194,7 +194,7 @@ describe("Connector", function () {
     // 6+-------+
     //  |       |
     // 4|   a   | +-------+
-    //  |       | |       |
+    //  |       |\|       |
     // 2+-------+ |   b   |
     // 1          |       |
     // 0          +-------+
@@ -210,9 +210,7 @@ describe("Connector", function () {
     expect(ee.b.y).toBeCloseTo(2.80, 2);
     expect(conn.isOverlap).not.toBeTrue();
   });
-  */
 
-  /*
   it("should have distance when far apart", function () {
     const a = new Node('a', -16.790159949671647, 5.571926205174964);
     const b = new Node('b', -27.141822812006268, 7.106986312982537);
@@ -224,9 +222,7 @@ describe("Connector", function () {
     console.log(a.shape.width, a.shape.height);
     expect(i.a.x).toBe(a.position.x);
   });
-  /*
 
-  /*
   it("should apply force to two nodes", function () {
     const a = new Node('a');
     const b = new Node('b');
@@ -269,7 +265,6 @@ describe("Connector", function () {
     expect(a.position.x).toBe(-b.position.x);
     expect(a.position.y).toBe(-b.position.y);
   });
-    */
 
   it("should apply force to two nodes", function () {
     const a = new Node('a');

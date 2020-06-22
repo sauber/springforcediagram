@@ -1,22 +1,25 @@
 "use strict";
 
+const Point     = require("./vector");
 const Vector    = require("./vector");
 const Line      = require("./line");
 const Rectangle = require("./rectangle");
-const Physics   = require("./physics");
+//const Physics   = require("./physics");
+const Springs   = require("./spring_factory");
 
 class Connector {
   constructor (node0, node1) { 
     if ( ! node0 || ! node1 )
       throw("Two nodes required for connector");
 
-    this.node0 = node0;
-    this.node1 = node1;
+    this.node0   = node0;
+    this.node1   = node1;
+    this.springs = new Springs;
   }
 
   // A line from center to center
   get centers () {
-    return new Line(this.node1.position, this.node0.position);
+    return new Line(this.node0.position, this.node1.position);
   }
 
   /*
@@ -158,13 +161,11 @@ class Connector {
   }
   */
 
+  // Do the nodes have overlap?
   get isOverlap () {
     const r1 = this.node0;
     const r2 = this.node1;
  
-    //if ( ! r1 || ! r2 )
-    //  console.log(r1, r2);
-
     return (
       r1.min_x < r2.max_x &&
       r2.min_x < r1.max_x &&
@@ -173,50 +174,114 @@ class Connector {
     );
   }
 
-  get intersections () {
+  // The spring connection node edges
+  //  +-------+
+  //  |       |
+  //  |   a   | +-------+
+  //  |       |\|       |
+  //  +-------+ |   b   |
+  //            |       |
+  //            +-------+
+  get spring () {
     const r1 = this.node0;
     const r2 = this.node1;
 
     // Are centers on top of each other
     const upon = r1.position.equals(r2.position);
 
-    const p1 = (r1.x, r1.y, r2.x, r2.y); // From middle of r1 to middle of r2
-    const p2 = (r2.x, r2.y, r1.x, r1.y); // From middle of r2 to middle of r1
+    const p1 = [r1.position.x, r1.position.y, r2.position.x, r2.position.y]; // From middle of r1 to middle of r2
+    const p2 = [r2.position.x, r2.position.y, r1.position.x, r1.position.y]; // From middle of r2 to middle of r1
 
     var r1_is;
     if ( r1.shape.area == 0 ) {
-      console.log("r1 zero area");
+      //console.log("r1 is zero area");
       r1_is = r1.position;
     } else if ( upon ) {
-      console.log("r1 same position");
+      //console.log("r1 is same position");
       r1_is = r1.randomVerticePoint;
     } else {
-      console.log("r1 distance");
+      //console.log("r1 is distance from r2");
+      //console.log(...p1, r1.min_x, r1.min_y, r2.min_x, r2.min_y);
       r1_is =
-        this.horizontalCross(p1, r1.max_y, r1.min_x, r2.max_x) || // top
-        this.horizontalCross(p1, r1.min_y, r1.min_x, r2.max_x) || // bottom
-        this.verticalCross(p1, r1.min_x, r1.min_y, r2.max_y) || // left
-        this.verticalCross(p1, r1.max_x, r1.min_y, r2.max_y); // right
+        this.horizontalCross(...p1, r1.max_y, r1.min_x, r2.max_x) || // top
+        this.horizontalCross(...p1, r1.min_y, r1.min_x, r2.max_x) || // bottom
+        this.verticalCross(...p1, r1.min_x, r1.min_y, r2.max_y) || // left
+        this.verticalCross(...p1, r1.max_x, r1.min_y, r2.max_y); // right
     }
+    //console.log(r1_is);
+    if ( ! r1_is ) throw ('r1 has no connector point');
 
     var r2_is;
     if ( r2.shape.area == 0 ) {
-      console.log("r2 zero area");
+      //console.log("r2 is zero area");
       r2_is = r2.position;
     } else if ( upon ) {
-      console.log("r2 same position");
+      //console.log("r2 is same position");
       r2_is = r2.randomVerticePoint;
     } else {
-      console.log("r2 distance");
+      //console.log("r2 is distance from r1");
+      //console.log(r1.min_x, r1.min_y, r2.min_x, r2.min_y);
       r2_is =
-        this.horizontalCross(p2, r2.max_y, r2.min_x, r1.max_x) || // top
-        this.horizontalCross(p2, r2.min_y, r2.min_x, r1.max_x) || // bottom
-        this.verticalCross(p2, r2.min_x, r2.min_y, r1.max_y) || // left
-        this.verticalCross(p2, r2.max_x, r2.min_y, r1.max_y); // right
+        this.horizontalCross(...p2, r2.max_y, r2.min_x, r1.max_x) || // top
+        this.horizontalCross(...p2, r2.min_y, r2.min_x, r1.max_x) || // bottom
+        this.verticalCross(...p2, r2.min_x, r2.min_y, r1.max_y) || // left
+        this.verticalCross(...p2, r2.max_x, r2.min_y, r1.max_y); // right
     }
+    //console.log(r2_is);
+    if ( ! r2_is ) throw ('r2 has no connector point');
 
-    return new Line(r1_is, r2_is);
-    
+    return this.springs.connector(new Line(r1_is, r2_is));
+  }
+
+  get spring_new () {
+    const n1 = this.node0;
+    const n2 = this.node1;
+    var p1, p2;
+
+    // Nodes have centers at same position
+    const upon = n1.position.equals(n2.position);
+
+    if ( n1.shape.area == 0 ) {
+      //console.log('node1 is zero area');
+      p1 = n1.position;
+    } else if ( upon ) {
+      //console.log('node1 has same center as node2');
+      p1 = n1.randomVerticePoint;
+    } else {
+      // cycle through each side of the node to find where center-to-center line crosses
+      // break when found
+      const sides = n1.sides;
+      for ( let side of sides ) {
+        const p = side.intersection(this.centers);
+        if ( p ) {
+          p1 = p;
+          break;
+        }
+      }
+    }
+    if ( ! p1 ) throw ('node1 has no connector point');
+
+    if ( n2.shape.area == 0 ) {
+      //console.log('node2 is zero area');
+      p2 = n2.position;
+    } else if ( upon ) {
+      //console.log('node2 has same center as node1');
+      p2 = n2.randomVerticePoint;
+    } else {
+      // cycle through each side of the node to find where center-to-center line crosses
+      // break when found
+      const sides = n2.sides;
+      for ( let side of sides ) {
+        const p = side.intersection(this.centers);
+        if ( p ) {
+          p2 = p;
+          break;
+        }
+      }
+    }
+    if ( ! p2 ) throw ('node1 has no connector point');
+
+    return this.springs.connector(new Line(p1, p2));
   }
 
   // A line is crossing a horizontal line
@@ -229,17 +294,20 @@ class Connector {
   //            r1
   //
   horizontalCross ( r1x, r1y, r2x, r2y, ly, x_min, x_max) {
+    //if ( ! r1x || ! r1y || ! r2x || ! r2y || ! ly || ! x_min || ! x_max ) throw(`horizontalCross missing input: r1x=${r1x} r1y=${r1y} r2x=${r2x} r2y=${r2y} ly=${ly}, x_min=${x_min}, x_max=${x_max}`);
     const  x = r2x - r1x; // x from r1 to r2
     const  y = r2y - r1y; // y from r1 to r2
     const dy =   ly - r1y; // y from r1 to line
     const dx = x * (dy/y);  // x from r1 to cross
     const cx = r1x + dx;   // x of point
+    //if ( ! cx ) throw(`cx is undefined: x=${x} y=${y} dy=${dy} dx=${dx} r1x=${r1x} r2x=${r2x}`);
     const cy = ly;          // y of point
-    if ( r1y > ly && r2y > ly ) return null; // Above
-    if ( r1y < ly && r2y < ly ) return null; // Below
+    //if ( r1y > ly && r2y > ly ) return null; // Above
+    //if ( r1y < ly && r2y < ly ) return null; // Below
     if ( cx < x_min || cx > x_max ) return null; // Not crossing
     if ( r2x > r1x && cx < r1x ) return null; // Crossing left of r1
     if ( r1x > r2x && cx > r1x ) return null; // Crossing right of r1
+    //console.log(`horizontalCross at cx=${cx}, cy=${cy}`);
     return new Vector(cx, cy);                   // Crossing between r1/r2 or beyond r2
   }
 
@@ -254,7 +322,7 @@ class Connector {
   // (x,y_min)
   //
   verticalCross ( r1x, r1y, r2x, r2y, lx, y_min, y_max) {
-    return horizontalCross(r1y, r1x, r2y, r2x, lx, y_min, y_max);
+    return this.horizontalCross(r1y, r1x, r2y, r2x, lx, y_min, y_max);
   }
 
 

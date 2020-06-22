@@ -1,2 +1,1 @@
-* Node geometry should be derived from the underlying shape
-* Center point should move from node to shape
+There is a problem with calculating the edge-to-edge connecter when nodes are overlapping.

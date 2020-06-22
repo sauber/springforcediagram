@@ -45,4 +45,9 @@ class Line {
   }
 }
 
+// Generate line from numbers instead of point objects
+Line.simple = function (ax, ay, bx, by) {
+  return new Line( new Point(ax, ay), new Point(bx, by) );
+}
+
 module.exports = Line;

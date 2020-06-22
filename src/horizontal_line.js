@@ -15,12 +15,14 @@ class HorizontalLine {
 
   // Point where line crosses
   intersection ( line ) {
+    //console.log('horizontal intersection', this, line);
     if ( line.a.y > this.y && line.b.y > this.y ) return null; // Above
     if ( line.a.y < this.y && line.b.y < this.y ) return null; // Below
 
     const cx = line.fx(this.y);
     if ( cx < this.a ) return null; // Left
     if ( cx > this.b ) return null; // Right
+    //console.log('result', new Point(cx, this.y));
     return new Point(cx, this.y);
   }
   

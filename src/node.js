@@ -9,6 +9,8 @@ const Rectangle = require("./rectangle");
 const Pressure  = require("./pressure");
 const Vector    = require("./vector");
 const Physics   = require("./physics");
+const Horizontal = require("./horizontal_line");
+const Vertical   = require("./vertical_line");
 
 class Node {
   constructor (label = undefined, x = 0, y = 0, width = 0, height = 0) {
@@ -76,6 +78,20 @@ class Node {
     ];
   }
 
+  // Each of the boundaries sides, and with pressure points
+  // XXX: Side loading an object with pressure, probably should be new type of object
+  get sides () {
+    const top = new Horizontal( this.max_y, this.min_x, this.max_x );
+    top.pressure = this.top;
+    const bottom = new Horizontal( this.min_y, this.min_x, this.max_x );
+    bottom.pressure = this.bottom;
+    const left = new Vertical( this.min_x, this.min_y, this.max_y );
+    left.pressure = this.left;
+    const right = new Vertical( this.max_x, this.min_y, this.max_y );
+    right.pressure = this.right;
+    return [ top, bottom, left, right ];
+  }
+
   // Pick a random point on a random vertice of a node
   get randomVerticePoint () {
     const vertice  = Math.random()*4;
@@ -133,9 +149,10 @@ class Node {
     this.updatePosition(timestep);
   }
 
-  // Disperse pressure on a boundaries to center
+  // Disperse pressure on boundaries to center position
   updateAcceleration (timestep = 1) {
     for (const point of this.boundaries) {
+      // Each boundary counts half, since there are two in each dimention
       this.center.acceleration = this.center.acceleration.add(point.acceleration).multiply(0.5);
     }
   }
